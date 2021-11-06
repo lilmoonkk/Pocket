@@ -5,21 +5,57 @@ import {auth} from '../firebase'
 
 const SignUp = () => {
   
+  const [userid, setUID] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
   const [phoneNo, setPhone] = useState('')
   const [Ic, setIc] = useState('')
   const navigation = useNavigation()
+  	
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        navigation.replace("MainPage");
+      }
+    })
+
+    return unsubscribe
+  }, [])
 
   const handleSignUp = () => {
+    if(username == "" || phoneNo == "" || Ic == "")
+    {
+      window.alert("Must field must be filled!");
+    }
+    else{
     auth
       .createUserWithEmailAndPassword(email, password)
       .then(userCredentials => {
         const user = userCredentials.user;
         console.log('registered with', user.email);
+
+        setUID(user.uid)
+
+        //send data to backend
+        fetch('http://192.168.0.5:19002/AddUser', {
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            userid : userid,
+            username : username,
+            identitycardno : Ic,
+            email : email,
+            phoneno : phoneNo    
+          })
+        }).then(response=>response.json()).then(data=>{
+             window.alert(data)
+             console.log(' with', user.email);
+             //Do anything else like Toast etc.
+        })
       })
       .catch(error => alert(error.message))
+    }
   }
 
   return (
