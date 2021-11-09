@@ -1,10 +1,10 @@
 const mysql = require("mysql");
 
 var mysqlConnection = mysql.createConnection({
-    host : "localhost",
+    host : "34.122.104.222",
     user : "root",
     password : "cat304",
-    database : "pocket",
+    database : "Pocket",
     multipleStatements : true
 });
 

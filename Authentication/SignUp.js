@@ -35,14 +35,14 @@ const SignUp = () => {
         const user = userCredentials.user;
         console.log('registered with', user.email);
 
-        setUID(user.uid)
+        //setUID(user.uid)
 
         //send data to backend
         fetch('http://192.168.0.5:19002/AddUser', {
           method: 'post',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
-            userid : userid,
+            userid : user.uid,
             username : username,
             identitycardno : Ic,
             email : email,
