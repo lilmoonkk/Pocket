@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { useNavigation, useRoute } from '@react-navigation/core'
+import { useNavigation, useRoute } from '@react-navigation/core';
 import { Modal, SafeAreaView, FlatList, StyleSheet, Text, Image, ScrollView, View, TouchableOpacity, TextInput } from 'react-native';
+import {auth} from './firebase';
 
 export default function MainPage() {
 
@@ -59,7 +60,16 @@ export default function MainPage() {
     //console.log(JSON.stringify(incomeData));
   }
 
-  
+  const navigation = useNavigation()
+
+  const handleSignOut = () => {
+    auth
+      .signOut()
+      .then(() => {
+        navigation.replace("Login")
+      })
+      .catch(error => alert(error.message))
+  }
   
   
   return (
@@ -123,6 +133,14 @@ export default function MainPage() {
         }
         />
       </SafeAreaView>
+      <Text
+          onPress={() => navigation.navigate('EditProfile')}>Edit Profile</Text>
+          <TouchableOpacity
+            onPress={handleSignOut}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Sign out</Text>           
+          </TouchableOpacity>
     </ScrollView>
   );
 }

@@ -8,7 +8,6 @@ import ResetPassword from './Authentication/ResetPassword';
 import EditProfile from './Authentication/EditProfile';
 import MainPage from './MainPage';
 import Login from './Authentication/Login';
-import Main from './Authentication/Main';
 import ChangePassword from './Authentication/ChangePassword';
 
 const Stack = createNativeStackNavigator();
@@ -17,7 +16,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Main" component={Main} />
+        
         <Stack.Screen options={{ headerShown: false }} name="Login" component={Login} />
         <Stack.Screen options={{ headerShown: false }} name="ForgetPassword" component={ResetPassword} />
         <Stack.Screen options={{ headerShown: false }} name="EditProfile" component={EditProfile} />
