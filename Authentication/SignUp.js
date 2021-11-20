@@ -16,7 +16,7 @@ const SignUp = () => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
-        navigation.replace("MainPage");
+        navigation.replace("MainPage", { userid: user.uid });
       }
     })
 
@@ -78,10 +78,10 @@ const SignUp = () => {
 
         <TouchableOpacity
           activeOpacity={0.5}
-          onPress={() => navigation.replace('SignUp')}
+          onPress={() => navigation.replace('Login')}
           style={styles.headerOutline}
         >
-          <Text style={styles.headerOutlineText}>Login</Text>
+          <Text style={styles.headerText}>Login</Text>
         </TouchableOpacity>
       </View>
 
@@ -154,7 +154,6 @@ LogoContainer:{
 },
 inputContainer: {
     width: '80%',
-    marginBottom: 50,
 },
 input: {
     backgroundColor: 'white',
@@ -190,25 +189,21 @@ header: {
 },
 headerText: {
     color: 'black',
-    fontWeight: '700',
+    fontWeight: 'bold',
     fontSize: 16,
 },
-headerOutlineText: {
-    color: '#000000',
-    fontWeight: '700',
-    fontSize: 16,
-},  
+
 button: {
     backgroundColor: 'rgba(172, 224, 221, 0.6)',
     width: '100%',
     padding: 15,
     borderRadius: 10,
-    marginTop: 30,
+    marginTop: 50,
     alignItems: 'center',
 },
 buttonText:{
     color: 'black',
-    fontWeight: '700',
+    fontWeight: 'bold',
     fontSize: 16,
 } 
 })
