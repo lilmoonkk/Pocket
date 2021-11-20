@@ -5,21 +5,57 @@ import {auth} from '../firebase'
 
 const SignUp = () => {
   
+  const [userid, setUID] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
   const [phoneNo, setPhone] = useState('')
   const [Ic, setIc] = useState('')
   const navigation = useNavigation()
+  	
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        navigation.replace("MainPage", { userid: user.uid });
+      }
+    })
+
+    return unsubscribe
+  }, [])
 
   const handleSignUp = () => {
+    if(username == "" || phoneNo == "" || Ic == "")
+    {
+      window.alert("Must field must be filled!");
+    }
+    else{
     auth
       .createUserWithEmailAndPassword(email, password)
       .then(userCredentials => {
         const user = userCredentials.user;
         console.log('registered with', user.email);
+
+        //setUID(user.uid)
+
+        //send data to backend
+        fetch('http://192.168.0.5:19002/AddUser', {
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            userid : user.uid,
+            username : username,
+            identitycardno : Ic,
+            email : email,
+            phoneno : phoneNo    
+          })
+        }).then(response=>response.json()).then(data=>{
+             window.alert(data)
+             console.log(' with', user.email);
+             //Do anything else like Toast etc.
+        })
       })
       .catch(error => alert(error.message))
+    }
   }
 
   return (
@@ -42,10 +78,10 @@ const SignUp = () => {
 
         <TouchableOpacity
           activeOpacity={0.5}
-          onPress={() => navigation.replace('SignUp')}
+          onPress={() => navigation.replace('Login')}
           style={styles.headerOutline}
         >
-          <Text style={styles.headerOutlineText}>Login</Text>
+          <Text style={styles.headerText}>Login</Text>
         </TouchableOpacity>
       </View>
 
@@ -118,7 +154,6 @@ LogoContainer:{
 },
 inputContainer: {
     width: '80%',
-    marginBottom: 50,
 },
 input: {
     backgroundColor: 'white',
@@ -154,25 +189,21 @@ header: {
 },
 headerText: {
     color: 'black',
-    fontWeight: '700',
+    fontWeight: 'bold',
     fontSize: 16,
 },
-headerOutlineText: {
-    color: '#000000',
-    fontWeight: '700',
-    fontSize: 16,
-},  
+
 button: {
     backgroundColor: 'rgba(172, 224, 221, 0.6)',
     width: '100%',
     padding: 15,
     borderRadius: 10,
-    marginTop: 30,
+    marginTop: 50,
     alignItems: 'center',
 },
 buttonText:{
     color: 'black',
-    fontWeight: '700',
+    fontWeight: 'bold',
     fontSize: 16,
 } 
 })
