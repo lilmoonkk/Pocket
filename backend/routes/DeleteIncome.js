@@ -2,18 +2,18 @@ const express = require("express");
 const Router = express.Router();
 const mysqlConnection = require("../connection");
 
-Router.get("/", (req, res)=>{
+Router.post("/", (req, res)=>{
     let {
         id
-    } = req.query;
- 
+    } = req.body;
+    
     var data = {
         id : id
     };
-
-    mysqlConnection.query("SELECT * from Pocket.income where id = ?",
-    [data.id], (err, rows, fields)=>{
-        if(!err)
+    
+    mysqlConnection.query("DELETE from Pocket.income where id = ?",
+    [data.id], (err, rows)=>{
+        if(err)
         {
             res.status(400).json('Sorry!!Unable To Delete');
         }

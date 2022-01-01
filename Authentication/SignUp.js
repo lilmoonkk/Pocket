@@ -38,7 +38,7 @@ const SignUp = () => {
         //setUID(user.uid)
 
         //send data to backend
-        fetch('http://192.168.0.5:19002/AddUser', {
+        fetch('http://192.168.0.10:19002/AddUser', {
           method: 'post',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
