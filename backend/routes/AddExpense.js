@@ -7,6 +7,7 @@ Router.post('/', (req, res) => {
     let {
         userid,
         desc,
+        category,
         amount,
         date,
         time
@@ -15,13 +16,14 @@ Router.post('/', (req, res) => {
     var data = {
         userid : userid,
         desc : desc,
+        category : category,
         amount : amount,
         date : date,
         time : time,
     };
  
-    var query = mysqlConnection.query("INSERT INTO income (income.userid, income.desc, income.amount, income.date, income.time) VALUES (?,?,?,?,?) ", 
-    [data.userid, data.desc, data.amount, data.date, data.time],
+    var query = mysqlConnection.query("INSERT INTO expense (expense.userid, expense.desc, expense.category, expense.amount, expense.date, expense.time) VALUES (?,?,?,?,?,?) ", 
+    [data.userid, data.desc, data.category, data.amount, data.date, data.time],
        function(err, rows) {
           if (err) {
              //If error
@@ -29,7 +31,7 @@ Router.post('/', (req, res) => {
           console.log("Error inserting : %s ", err);
        } else{
           //If success
-          res.status(200).json('Income Added Successfully!!');
+          res.status(200).json('Expense Added Successfully!!');
        }
     });
 });

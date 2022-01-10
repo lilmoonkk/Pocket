@@ -26,10 +26,101 @@ function spending(){
   const {userid} = route.params;
   const [AddExpenseModalVisible, setAEModalVisible] = useState(false);
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("category");
+  const [category, setCategory] = useState("Food");
   const [amount, setAmount] = useState("");
+  const [expenseData, setExpenseData] = useState("");
+  const date = new Date().getDate() + '/' + (new Date().getMonth()+1) + '/' + new Date().getFullYear();
+
+  useEffect(() => {
+    fetchExpenseData();
+  }, [])
+
+  const fetchExpenseData = async()=>{
+    const response = await fetch('http://192.168.0.9:19002/GetExpense?userid=' + userid + '&date=' + date);
+    const expense = await response.json();
+    //setIncomeData(JSON.stringify(income));
+    setExpenseData(expense[0]);
+    //console.log(typeof income[1][0].sum)
+    //setIncomeSum(income[1][0].sum);
+    //console.log(incomeSum[0].sum);
+    //console.log(JSON.stringify(incomeData));
+  }
+
+  const AddExpense = () => {
+    if(description == "" || amount == "")
+    {
+      window.alert("All field must be filled!");
+    }
+    else{
+        //send data to backend
+        fetch('http://192.168.0.9:19002/AddExpense', {
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            userid : userid,
+            desc : description,
+            category : category,
+            amount : amount,
+            date : date,
+            time : new Date().getHours() + ':' + new Date().getMinutes()
+          })
+        }).then(response=>response.json()).then(data=>{
+             window.alert(data)
+             //Do anything else like Toast etc.
+        })
+      .catch(error => alert(error.message))
+    }
+  }
+
+  const confirmDelete = (expenseid) => {
+    Alert.alert(
+      "",
+      "Are you sure?",
+      [
+        {
+          text: "DELETE",
+          onPress: () => fetch('http://192.168.0.9:19002/DeleteExpense', {
+            method: 'post',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              id : expenseid
+            })
+          }).then(response=>response.json()).then(data=>{
+               window.alert(data)
+               //Do anything else like Toast etc.
+               fetchExpenseData();
+          })
+        .catch(error => alert(error.message)),
+          style: "cancel"
+        },
+        { text: "CANCEL", onPress: () => console.log("CANCEL Pressed") }
+      ]
+    );
+  }
+
   return(
     <View style={{flex: 1, backgroundColor:'yellow'}}>
+        <SafeAreaView style={styles.incomesContainer}>
+        
+          <FlatList
+          
+          horizontal = {false}
+          data = {expenseData}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem = {({item}) =>
+          <View style={styles.income}>
+              <TouchableOpacity
+              onPress = {() => confirmDelete(item.id)}>
+              <Image source={require('./assets/trash.png')}
+              style={{width: 25, height: 25}}></Image></TouchableOpacity>
+              <Text style={{color:'#000', fontWeight:'bold'}}>{item.time}</Text>
+              <Text style={{color:'#000'}}>{item.desc}</Text>
+              <Text style={{color:'#000'}}>{item.category}</Text>
+              <Text style={{color:'#000'}}>RM {item.amount.toFixed(2)}</Text>
+          </View>
+          }
+          />
+        </SafeAreaView>
         <View style={{flex: 1,justifyContent: 'flex-end', backgroundColor:'green'}}>
         <TouchableOpacity 
       style={styles.addBtn}
@@ -62,7 +153,7 @@ function spending(){
           <Text style = {{marginBottom: 10}}>Amount(MYR)</Text>
           <TextInput style = {{borderBottomWidth: 1}} onChangeText = {setAmount}/>
           <Text 
-          style = {{margin: 30}} onPress = {() => {setAEModalVisible(false)}}>OK</Text>
+          style = {{margin: 30}} onPress = {() => {AddExpense(); fetchExpenseData(); setAEModalVisible(false);}}>OK</Text>
           
           <Text onPress = {() => {
             setAEModalVisible(false);
@@ -90,7 +181,7 @@ function income(){
   }, [])
 
   const fetchIncomeData = async()=>{
-    const response = await fetch('http://192.168.0.12:19002/GetIncome?userid=' + userid + '&date=' + date);
+    const response = await fetch('http://192.168.0.9:19002/GetIncome?userid=' + userid + '&date=' + date);
     const income = await response.json();
     //setIncomeData(JSON.stringify(income));
     setIncomeData(income[0]);
@@ -103,11 +194,11 @@ function income(){
   const AddIncome = () => {
     if(description == "" || amount == "")
     {
-      window.alert("Must field must be filled!");
+      window.alert("All field must be filled!");
     }
     else{
         //send data to backend
-        fetch('http://192.168.0.12:19002/AddIncome', {
+        fetch('http://192.168.0.9:19002/AddIncome', {
           method: 'post',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
@@ -132,7 +223,7 @@ function income(){
       [
         {
           text: "DELETE",
-          onPress: () => fetch('http://192.168.0.12:19002/DeleteIncome', {
+          onPress: () => fetch('http://192.168.0.9:19002/DeleteIncome', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
