@@ -9,7 +9,8 @@ import EditProfile from './Authentication/EditProfile';
 import MainPage from './MainPage';
 import Login from './Authentication/Login';
 import ChangePassword from './Authentication/ChangePassword';
-
+import Budget from './goal/Budget';
+import ViewOngoing from './goal/view_ongoing';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -23,6 +24,8 @@ export default function App() {
         <Stack.Screen name="ChangePassword" component={ChangePassword} />
         <Stack.Screen options={{ headerShown: false }} name="SignUp" component={SignUp} />
         <Stack.Screen options={{ headerShown: false }} name="MainPage" component={MainPage} />
+        <Stack.Screen options={{ headerShown: false }} name="Budget" component={Budget} />
+        <Stack.Screen options={{ headerShown: false }} name="ViewOngoing" component={ViewOngoing} />
       </Stack.Navigator>
     </NavigationContainer>
   );

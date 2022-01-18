@@ -13,7 +13,7 @@ const Login = () => {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
           if (user) {
-            navigation.replace("MainPage", { userid: user.uid })
+            navigation.replace("Budget", { userid: user.uid });
           }
         })
 
