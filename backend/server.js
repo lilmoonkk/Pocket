@@ -10,6 +10,9 @@ const GetExpense = require("./routes/GetExpense")
 const DeleteExpense = require("./routes/DeleteExpense")
 const GetBudget = require("./routes/GetBudget")
 const UpdateBudget = require("./routes/UpdateBudget")
+const AddGoal = require("./routes/AddGoal")
+const GetGoal = require("./routes/GetGoal")
+const DeleteGoal = require("./routes/DeleteGoal")
 
 var app = express();
 app.use(express.json());
@@ -24,5 +27,8 @@ app.use("/GetExpense", GetExpense);
 app.use("/DeleteExpense", DeleteExpense);
 app.use("/GetBudget", GetBudget);
 app.use("/UpdateBudget", UpdateBudget);
+app.use("/AddGoal", AddGoal);
+app.use("/GetGoal", GetGoal);
+app.use("/DeleteGoal", DeleteGoal);
 
 app.listen(19002)

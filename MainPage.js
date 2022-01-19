@@ -194,7 +194,7 @@ function income(){
   }, [])
 
   const fetchIncomeData = async()=>{
-    const response = await fetch('http://192.168.43.89:19002/GetIncome?userid=' + userid + '&date=' + date);
+    const response = await fetch('http://192.168.0.12:19002/GetIncome?userid=' + userid + '&date=' + date);
     const income = await response.json();
     //setIncomeData(JSON.stringify(income));
     setIncomeData(income[0]);
@@ -211,7 +211,7 @@ function income(){
     }
     else{
         //send data to backend
-        fetch('http://192.168.43.89:19002/AddIncome', {
+        fetch('http://192.168.0.12:19002/AddIncome', {
           method: 'post',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
@@ -236,7 +236,7 @@ function income(){
       [
         {
           text: "DELETE",
-          onPress: () => fetch('http://192.168.43.89:19002/DeleteIncome', {
+          onPress: () => fetch('http://192.168.0.12:19002/DeleteIncome', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
