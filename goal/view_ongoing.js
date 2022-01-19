@@ -1,12 +1,13 @@
 import React, {useState} from 'react'
-import { KeyboardAvoidingView, Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {MaterialCommunityIcons, AntDesign} from '@expo/vector-icons'
-import { ScrollView, TextInput } from 'react-native-gesture-handler'
+import { KeyboardAvoidingView, Animated, StyleSheet, Text, TouchableOpacity, View, ScrollView, TextInput} from 'react-native'
+import {MaterialCommunityIcons} from '@expo/vector-icons'
 import {Picker} from '@react-native-picker/picker';
+import {useRoute } from '@react-navigation/core';
 
-
-export default function view_ongoing({navigation})
+export default function view_ongoing()
 {
+    const route = useRoute();
+    const {userid} = route.params;
     const[amount, setAmount] = useState('')
     
     const colors ={
