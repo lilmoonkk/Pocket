@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, Alert,TextInput, SafeAreaView, FlatList, Modal } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Alert,TextInput, SafeAreaView, FlatList, Modal, Image } from 'react-native'
 import {Picker} from '@react-native-picker/picker';
 import {useRoute } from '@react-navigation/core';
+import { globalStyles } from '../styles/global';
+import { AntDesign } from '@expo/vector-icons'; 
 
 export default function Budget()
 {
@@ -17,7 +19,7 @@ export default function Budget()
       }, [])
 
     const fetchBudgetData = async()=>{
-        const response = await fetch('http://192.168.0.12:19002/GetBudget?userid=' + userid);
+        const response = await fetch('http://192.168.43.89:19002/GetBudget?userid=' + userid);
         const expense = await response.json();
         setBudgetData(expense[0]);
     }
@@ -30,7 +32,7 @@ export default function Budget()
         else
         {
             //send data to backend
-            fetch('http://192.168.0.12:19002/UpdateBudget', {
+            fetch('http://192.168.43.89:19002/UpdateBudget', {
               method: 'post',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({
@@ -47,60 +49,108 @@ export default function Budget()
     }
 
     return (
-    <View style={{flex: 1, backgroundColor:'yellow'}}>
-        <SafeAreaView style={styles.incomesContainer}>
         
-          <FlatList
-          
-          horizontal = {false}
-          data = {budgetData}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem = {({item}) =>
-          <View style={styles.income}>
-              <TouchableOpacity
-              onPress = {() => {setUBModalVisible(true); setCategory(item.category);}}>
-              <Text style={{color:'#000', fontWeight:'bold'}}>{item.category}</Text>
-              <Text style={{color:'#000'}}>RM {item.amount.toFixed(2)}</Text>
-              </TouchableOpacity>
-          </View>
-          }
-          />
-        <Modal
-        transparent = {true}
-        backdropColor={'green'}
-        backdropOpacity= {1}
-        visible = {UpdateBudgetModalVisible}
-        onRequestClose = {() => {
+    <View style={{flex: 1,}}>
+        <View style={globalStyles.header}></View>
+        <View style={styles.background}>
+            <SafeAreaView style={styles.body}>
+                <FlatList
+                    horizontal = {false}
+                    data = {budgetData}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem = {({item}) =>
+                    <View style={styles.detailContainer}>
+                        <View style = {styles.details}>
+                            <Text style={{color:'#000', fontWeight:'bold'}}>{item.category}</Text>
+                            <Text style={{color:'#000'}}>RM {item.amount.toFixed(2)}</Text>
+                        </View>
+                        <View style = {styles.details}>
+                            <TouchableOpacity
+                            onPress = {() => {
+                                setUBModalVisible(true); 
+                                setCategory(item.category);}}>
+                                <AntDesign name="edit" size={24} color="black" />
+                            </TouchableOpacity>
+                        </View>
+                        
+                    </View>
+                }/>
+                <Modal
+                    transparent = {true}
+                    backdropColor={'green'}
+                    backdropOpacity= {1}
+                    visible = {UpdateBudgetModalVisible}
+                    onRequestClose = {() => {
 
-        }}>
-        <View style = {styles.modal}>
-          <Text>Update Budget</Text>
-          <Text style = {{marginBottom: 10}}>{category}</Text>
-          <Text style = {{marginBottom: 10}}>Amount(MYR)</Text>
-          <TextInput style = {{borderBottomWidth: 1}} onChangeText = {setAmount}/>
-          <Text 
-          style = {{margin: 30}} onPress = {() => {UpdateBudget(); fetchBudgetData(); setUBModalVisible(false); setAmount("")}}>OK</Text>
-          
-          <Text onPress = {() => {
-            setUBModalVisible(false);
-          }}>CANCEL</Text>
-        </View>
-        </Modal>
-        </SafeAreaView>
-        
+                    }}>
+                    <View style = {styles.modal_container}>
+                        <View style = {styles.modal}>
+                            <Text style = {globalStyles.modal_label}>Update Budget</Text>
+                            <Text style = {{fontWeight: 'bold', fontSize: 16}}>{category}</Text>
+                            <Text style = {globalStyles.label}>Amount(MYR)</Text>
+                            <TextInput style = {globalStyles.input} onChangeText = {setAmount}/>
+                            <View style ={globalStyles.buttonContainer}>
+                                <Text 
+                                    style = {globalStyles.button} 
+                                    onPress = {() => {
+                                        UpdateBudget(); 
+                                        fetchBudgetData(); 
+                                        setUBModalVisible(false); 
+                                        setAmount("")
+                                    }}>SAVE</Text>
+                                
+                                <Text 
+                                    style = {globalStyles.button}
+                                    onPress = {() => {
+                                    setUBModalVisible(false);
+                                }}>DISCARD</Text>
+                            </View>
+                        </View>
+                    </View>
+                    
+                </Modal>
+            </SafeAreaView>
+        </View> 
     </View>
     );
 }
 
 const styles = StyleSheet.create
 ({
-    body: 
-    {
-        flex:1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding:10
+    background:{
+        flex: 1,
+        marginTop: -100,
+        marginStart: 20,
+        marginEnd: 20,
+        marginBottom: 20, 
     },
+
+    body:{ 
+        backgroundColor:'white',
+        borderRadius: 10,
+        alignItems: 'center',
+        elevation: 4,
+    },
+
+    detailContainer:{
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        backgroundColor: 'white',
+        width : 300,
+        height : 70,
+        padding : 10,
+        margin : 10,
+        borderColor: 'black',
+        borderWidth: 1,
+        borderRadius: 10,
+    },
+
+    details:{
+        flexDirection: 'column',
+        justifyContent: 'space-evenly',
+    },
+
     input:
     {
         width:'100%',
@@ -199,15 +249,19 @@ const styles = StyleSheet.create
         flex: 2
     },
 
+    modal_container:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
     modal: {
-        marginTop: 150,
-        marginLeft: 50,
-        marginRight: 50,
-        height: 300,
+        width: 320,
+        height: 220,
         backgroundColor: "white",
         borderRadius: 20,
-        padding: 35,
-        alignItems: "center",
+        padding: 15,
+        alignItems: "flex-start",
         shadowColor: "#000",
         shadowOffset: {
           width: 0,
