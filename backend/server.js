@@ -4,6 +4,7 @@ const UserRoutes = require("./routes/user")
 const AddUser = require("./routes/AddUser")
 const AddIncome = require("./routes/AddIncome")
 const GetIncome = require("./routes/GetIncome")
+const GetLastMonthIncome = require("./routes/GetLastMonthIncome")
 const DeleteIncome = require("./routes/DeleteIncome")
 const AddExpense = require("./routes/AddExpense")
 const GetExpense = require("./routes/GetExpense")
@@ -13,6 +14,7 @@ const UpdateBudget = require("./routes/UpdateBudget")
 const AddGoal = require("./routes/AddGoal")
 const GetGoal = require("./routes/GetGoal")
 const DeleteGoal = require("./routes/DeleteGoal")
+const UpdateGoal = require("./routes/UpdateGoal")
 
 var app = express();
 app.use(express.json());
@@ -21,6 +23,7 @@ app.use("/user", UserRoutes);
 app.use("/AddUser", AddUser);
 app.use("/AddIncome", AddIncome);
 app.use("/GetIncome", GetIncome);
+app.use("/GetLastMonthIncome", GetLastMonthIncome);
 app.use("/DeleteIncome", DeleteIncome);
 app.use("/AddExpense", AddExpense);
 app.use("/GetExpense", GetExpense);
@@ -30,5 +33,6 @@ app.use("/UpdateBudget", UpdateBudget);
 app.use("/AddGoal", AddGoal);
 app.use("/GetGoal", GetGoal);
 app.use("/DeleteGoal", DeleteGoal);
+app.use("/UpdateGoal", UpdateGoal);
 
 app.listen(19002)
