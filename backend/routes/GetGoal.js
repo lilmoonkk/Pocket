@@ -11,7 +11,7 @@ Router.get("/", (req, res)=>{
         userid : userid
     };
 
-    mysqlConnection.query("SELECT * from Pocket.goal where goal.userid = ? and goal.desc != ?; SELECT * from Pocket.goal where goal.userid = ? and goal.desc = ?",
+    mysqlConnection.query("SELECT *, (goal.allocated/goal.target)percentage from Pocket.goal where goal.userid = ? and goal.desc != ?; SELECT *, (goal.allocated/goal.target)percentage from Pocket.goal where goal.userid = ? and goal.desc = ?",
     [data.userid, 'Emergency Fund', data.userid, 'Emergency Fund'], (err, rows, fields)=>{
         if(!err)
         {
