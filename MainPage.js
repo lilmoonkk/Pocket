@@ -165,11 +165,15 @@ function spending(){
           <TextInput style = {styles.input} onChangeText = {setDescription}/>
           <Text style = {styles.label}>Category</Text>
           <Picker style = {styles.input} selectedValue={category} onValueChange={(itemValue) => setCategory(itemValue)}>
+            <Picker.Item label = "Charity" value ="Charity"/>
+            <Picker.Item label = "Clothes and Beauty" value ="Clothes and Beauty"/>
+            <Picker.Item label = "Education and Self-improvement" value ="Education and Self-improvement"/>
+            <Picker.Item label = "Entertainment" value ="Entertainment"/>
             <Picker.Item label = "Food" value ="Food"/>
-            <Picker.Item label = "Grocery" value ="Grocery"/>
-            <Picker.Item label = "CLothes" value ="Clothes"/>
-            <Picker.Item label = "Shopping and Entertainment" value ="Shopping and Entertainment"/>
+            <Picker.Item label = "Groceries and Household good" value ="Groceries and Household good"/>
+            <Picker.Item label = "Insurance and Healthcare" value ="Insurance and Healthcare"/>
             <Picker.Item label = "Others" value ="Others"/>
+            <Picker.Item label = "Transportation" value ="Transportation"/>
           </Picker>
           <Text style = {{marginBottom: 10}}>Amount(MYR)</Text>
           <TextInput style = {{borderBottomWidth: 1}} onChangeText = {setAmount}/>
