@@ -17,6 +17,7 @@ const DeleteGoal = require("./routes/DeleteGoal")
 const UpdateGoal = require("./routes/UpdateGoal")
 const GetProfile = require("./routes/GetProfile")
 const UpdateProfile = require("./routes/UpdateProfile")
+const GetSaving = require("./routes/GetSaving")
 
 var app = express();
 app.use(express.json());
@@ -38,5 +39,6 @@ app.use("/DeleteGoal", DeleteGoal);
 app.use("/UpdateGoal", UpdateGoal);
 app.use("/GetProfile", GetProfile);
 app.use("/UpdateProfile", UpdateProfile);
+app.use("/GetSaving", GetSaving);
 
 app.listen(19002)

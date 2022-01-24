@@ -4,15 +4,15 @@ const mysqlConnection = require("../connection");
 
 Router.get("/", (req, res)=>{
     let {
-        userid
+        userid,
     } = req.query;
  
     var data = {
-        userid : userid
+        userid : userid,
     };
 
-    mysqlConnection.query("SELECT *, (goal.allocated/goal.target)percentage from Pocket.goal where goal.userid = ? and goal.desc != ?; SELECT *, (goal.allocated/goal.target)percentage from Pocket.goal where goal.userid = ? and goal.desc = ?",
-    [data.userid, 'Emergency Fund', data.userid, 'Emergency Fund'], (err, rows, fields)=>{
+    mysqlConnection.query("SELECT saving.amount from Pocket.saving where userid = ?;",
+    [data.userid], (err, rows, fields)=>{
         if(!err)
         {
             res.send(rows);

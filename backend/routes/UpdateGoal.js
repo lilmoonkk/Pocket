@@ -14,8 +14,8 @@ Router.post('/', (req, res) => {
         amount : amount
     };
    
-    mysqlConnection.query("UPDATE goal SET goal.amount = ? WHERE goal.id = ?;", 
-    [data.amount, data.id],
+    mysqlConnection.query("UPDATE goal SET goal.allocated = ((select * from (select goal.allocated from goal where goal.id = ?)ori)+?)  WHERE goal.id = ?;", 
+    [data.id, data.amount, data.id],
        function(err, rows) {
           if (err) {
              //If error

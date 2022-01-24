@@ -203,13 +203,16 @@ function income(){
   const [amount, setAmount] = useState("");
   const [incomeData, setIncomeData] = useState("");
   const date = new Date().getDate() + '/' + (new Date().getMonth()+1) + '/' + new Date().getFullYear();
+  const day = new Date().getDate();
+  const month = new Date().getMonth()+1;
+  const year = new Date().getFullYear()
 
   useEffect(() => {
     fetchIncomeData();
   }, [])
 
   const fetchIncomeData = async()=>{
-    const response = await fetch('http://192.168.43.89:19002/GetIncome?userid=' + userid + '&date=' + date);
+    const response = await fetch('http://192.168.0.12:19002/GetIncome?userid=' + userid + '&day=' + day + '&month=' + month + '&year=' + year);
     const income = await response.json();
     //setIncomeData(JSON.stringify(income));
     setIncomeData(income[0]);
@@ -233,7 +236,10 @@ function income(){
             userid : userid,
             desc : description,
             amount : amount,
-            date : date,
+            //date : date,
+            day : day,
+            month : month,
+            year : year,
             time : new Date().getHours() + ':' + new Date().getMinutes()
           })
         }).then(response=>response.json()).then(data=>{

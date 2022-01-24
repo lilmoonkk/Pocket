@@ -8,7 +8,9 @@ Router.post('/', (req, res) => {
         userid,
         desc,
         amount,
-        date,
+        day,
+        month,
+        year,
         time
     } = req.body;
  
@@ -16,12 +18,14 @@ Router.post('/', (req, res) => {
         userid : userid,
         desc : desc,
         amount : amount,
-        date : date,
+        day : day,
+        month : month,
+        year : year,
         time : time,
     };
  
-    var query = mysqlConnection.query("INSERT INTO income (income.userid, income.desc, income.amount, income.date, income.time) VALUES (?,?,?,?,?) ", 
-    [data.userid, data.desc, data.amount, data.date, data.time],
+    var query = mysqlConnection.query("INSERT INTO income (income.userid, income.desc, income.amount, income.day, income.month, income.year, income.time) VALUES (?,?,?,?,?,?,?) ", 
+    [data.userid, data.desc, data.amount, data.day, data.month, data.year, data.time],
        function(err, rows) {
           if (err) {
              //If error
