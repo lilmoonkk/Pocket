@@ -45,13 +45,16 @@ function spending(){
   const [amount, setAmount] = useState("");
   const [expenseData, setExpenseData] = useState("");
   const date = new Date().getDate() + '/' + (new Date().getMonth()+1) + '/' + new Date().getFullYear();
-
+  const day = new Date().getDate();
+  const month = new Date().getMonth()+1;
+  const year = new Date().getFullYear()
+  
   useEffect(() => {
     fetchExpenseData();
   }, [])
 
   const fetchExpenseData = async()=>{
-    const response = await fetch('http://192.168.0.12:19002/GetExpense?userid=' + userid + '&date=' + date);
+    const response = await fetch('http://192.168.0.12:19002/GetExpense?userid=' + userid + '&day=' + day + '&month=' + month + '&year=' + year);
     const expense = await response.json();
     //setIncomeData(JSON.stringify(income));
     setExpenseData(expense[0]);
@@ -76,7 +79,9 @@ function spending(){
             desc : description,
             category : category,
             amount : amount,
-            date : date,
+            day : day,
+            month : month,
+            year : year,
             time : new Date().getHours() + ':' + new Date().getMinutes()
           })
         }).then(response=>response.json()).then(data=>{

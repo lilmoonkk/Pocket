@@ -9,7 +9,9 @@ Router.post('/', (req, res) => {
         desc,
         category,
         amount,
-        date,
+        day,
+        month,
+        year,
         time
     } = req.body;
  
@@ -18,12 +20,14 @@ Router.post('/', (req, res) => {
         desc : desc,
         category : category,
         amount : amount,
-        date : date,
+        day : day,
+        month : month,
+        year : year,
         time : time,
     };
  
-    var query = mysqlConnection.query("INSERT INTO expense (expense.userid, expense.desc, expense.category, expense.amount, expense.date, expense.time) VALUES (?,?,?,?,?,?) ", 
-    [data.userid, data.desc, data.category, data.amount, data.date, data.time],
+    var query = mysqlConnection.query("INSERT INTO expense (expense.userid, expense.desc, expense.category, expense.amount, expense.day, expense.month, expense.year, expense.time) VALUES (?,?,?,?,?,?,?,?) ", 
+    [data.userid, data.desc, data.category, data.amount, data.day, data.month, data.year, data.time],
        function(err, rows) {
           if (err) {
              //If error
