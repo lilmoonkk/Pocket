@@ -97,12 +97,12 @@ const EditProfile = () => {
     }
 
     return (
-        <SafeAreaView style = {{flex: 1}}>
+        <View style = {{flex: 1}}>
             <View style = {styles.headerContainer}></View>
             <View style = {styles.background}>
                 <Text style = {styles.header}> Profile </Text>
                     
-                <View style = {styles.body}>
+                <SafeAreaView style = {styles.body}>
                     <TouchableOpacity
                         style = {{alignSelf: 'flex-end', padding: 15,}}
                         onPress = {() => {
@@ -200,9 +200,9 @@ const EditProfile = () => {
                         </View>
                         
                     </Modal>
-                </View>
+                </SafeAreaView>
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
 
@@ -211,6 +211,7 @@ export default EditProfile
 const styles = StyleSheet.create({
     headerContainer: {
         height: 170,
+        marginTop: 40,
         backgroundColor: "#FFADAD",
         borderBottomLeftRadius: 15,
         borderBottomRightRadius: 15,
@@ -221,7 +222,7 @@ const styles = StyleSheet.create({
     },
     background: {
         flex: 1,
-        marginTop: -100,
+        marginTop: -160,
         marginStart: 20,
         marginEnd: 20,
         marginBottom: 10,
@@ -233,7 +234,7 @@ const styles = StyleSheet.create({
     body: {
         flex: 1,
         alignItems: 'center',
-        marginTop: 10,
+        marginTop: 15,
         backgroundColor: 'white',
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,

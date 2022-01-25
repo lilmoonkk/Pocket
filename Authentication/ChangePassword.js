@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     },
     background: {
         flex: 1,
-        marginTop: -110,
+        marginTop: -160,
         marginStart: 20,
         marginEnd: 20,
         marginBottom: 10,
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     },
     body: {
         flex: 1,
-        marginTop: 10,
+        marginTop: 15,
         backgroundColor: 'white',
         borderTopRightRadius: 15,
         borderTopLeftRadius: 15,
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         padding: 15,
         borderRadius: 15,
-        marginTop: 10,
+        marginBottom: 10,
         alignItems: 'center',
         borderColor: "#A0C4FF"
     },

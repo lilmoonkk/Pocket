@@ -295,7 +295,6 @@ export default function Goal() {
 
 const styles = StyleSheet.create({
   headerContainer: {
-        height: 200,
         marginTop: 40,
         height: 170,
         backgroundColor: '#B0B2FF',
@@ -312,12 +311,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   body: {
-        flex: 1,
-        alignItems: 'center',
-        marginTop: 10,
-        backgroundColor: 'white',
-        borderTopRightRadius: 10,
-        borderTopLeftRadius: 10,
+    flex: 1,
+    alignItems: 'center',
+    marginTop: 15,
+    backgroundColor: 'white',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
   },
   addBtn: {
     width: 50,
@@ -401,14 +400,14 @@ const styles = StyleSheet.create({
   },
 
   incomesContainer: {
-        flex: 1,
-        marginTop: -100,
-        marginStart: 20,
-        marginEnd: 20,
-        marginBottom: 10,
-        shadowColor: 'black',
-        shadowOpacity: 1,
-        shadowOffset: {width: 1, height: 3},
-        elevation: 4,
+    flex: 1,
+    marginTop: -160,
+    marginStart: 20,
+    marginEnd: 20,
+    marginBottom: 10,
+    shadowColor: 'black',
+    shadowOpacity: 1,
+    shadowOffset: {width: 1, height: 3},
+    elevation: 4,
   }
 });

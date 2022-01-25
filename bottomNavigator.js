@@ -18,6 +18,7 @@ export default function bottomNavigator() {
         <Tab.Navigator
             initialRouteName = "Main"
             activeColor = 'black'
+            inactiveTintColor = 'grey'
             labelStyle = {{ fontSize: 12, borderWidth:1, borderRadius: 15,}}
             barStyle = {{ backgroundColor: 'white', }}
             >
@@ -40,7 +41,7 @@ export default function bottomNavigator() {
                 options={{
                 tabBarLabel: 'Budget',
                 tabBarIcon: ({ color }) => (
-                    <FontAwesome5 name="file-invoice-dollar" size={24} color="black" />
+                    <FontAwesome5 name="file-invoice-dollar" size={26} color={color} />
                 ),
                 }}
             />

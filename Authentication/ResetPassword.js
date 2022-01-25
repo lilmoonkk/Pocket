@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     },
     background: {
       flex: 1,
-      marginTop: -100,
+      marginTop: -160,
       marginStart: 20,
       marginEnd: 20,
       marginBottom: 10,
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     },
     body: {
       flex: 1,
-      marginTop: 10,
+      marginTop: 15,
       backgroundColor: 'white',
       borderTopRightRadius: 10,
       borderTopLeftRadius: 10,

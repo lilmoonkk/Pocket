@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, TextInput, Image, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/core'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import {auth} from '../firebase';
@@ -12,7 +12,7 @@ const SignUp = () => {
     return (
         <View style={{flex: 1}}>
             <View style={styles.LogoContainer}>
-
+                <Image style = {styles.image} source={require('../assets/logo.png')}></Image>
             </View>
             <View style={styles.tabContainer}>
                 <topTab.Navigator
@@ -285,8 +285,9 @@ export default SignUp
 
 const styles = StyleSheet.create({
     LogoContainer: {
-        marginTop: 50,
+        marginTop: 40,
         height: '30%',
+        alignContent: 'center',
     },
     tabContainer: {
         flex: 1,

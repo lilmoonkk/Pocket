@@ -50,9 +50,9 @@ export default function Budget()
 
     return (
         
-    <View style={{flex: 1,}}>
+    <View style={{flex: 1}}>
         <View style={globalStyles.header}></View>
-        <View style={styles.background}>
+        <View style={globalStyles.background}>
             <Text style = {styles.header}> Budget </Text>
             <SafeAreaView style={styles.body}>
                 <FlatList
@@ -139,7 +139,7 @@ const styles = StyleSheet.create
     body:{ 
         flex: 1,
         alignItems: 'center',
-        marginTop: 10,
+        marginTop: 15,
         backgroundColor: 'white',
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
