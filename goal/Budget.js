@@ -4,6 +4,10 @@ import {Picker} from '@react-native-picker/picker';
 import {useRoute } from '@react-navigation/core';
 import { globalStyles } from '../styles/global';
 import { AntDesign } from '@expo/vector-icons'; 
+import * as tf from '@tensorflow/tfjs';
+import { fetch, bundleResourceIO } from '@tensorflow/tfjs-react-native';
+import ndarray from 'ndarray';
+
 
 export default function Budget()
 {
@@ -13,15 +17,60 @@ export default function Budget()
     const [budgetData, setBudgetData] = useState("");
     const [UpdateBudgetModalVisible, setUBModalVisible] = useState(false);
     const[amount, setAmount] = useState("")
+    const [isTfReady, setTfReady] = useState(false);
+    const [result, setResult] = useState(null);
+    var month = new Date().getMonth()+1;
+    var year = new Date().getFullYear();
+
+    if(month == 1){
+        year = year -1;
+        month = 12;
+    }
+
+
+    useEffect(() => {
+        async function waitForTensorFlowJs() {
+        await tf.ready();
+            setTfReady(true);
+        }
+        waitForTensorFlowJs();
+    }, []);
+
+    useEffect(() => {
+        async function predict(){
+            if (isTfReady) {
+            const response = await fetch('http://192.168.100.5:19002/GetLastMonthIncome?userid=' + userid + '&month=' + month + '&year=' + year);
+            const lmincome = await response.json()
+            var lm_income = lmincome[0]["sum"];
+            var fixspend = 540;
+            lm_income = (lm_income-670)/(66395-670)
+            fixspend = (fixspend-418)/(1621-418)
+            const x = tf.tensor2d([[lm_income,fixspend]])
+            const modelJson = await require('../assets/model/model.json');
+            const modelWeights = await require('../assets/model/group1-shard1of1.bin');
+            // Use the bundleResorceIO IOHandler to load the model
+            const model = await tf.loadLayersModel(bundleResourceIO(modelJson, modelWeights));
+            //Predict result
+            var result = await model.predict(x).dataSync()
+            result = parseFloat(result).toFixed(2)
+            setResult(result)
+        }
+    }
+    predict();
+    }, [isTfReady]);
     
     useEffect(() => {
         fetchBudgetData();
       }, [])
+    
+      
 
     const fetchBudgetData = async()=>{
-        const response = await fetch('http://192.168.43.89:19002/GetBudget?userid=' + userid);
+        const response = await fetch('http://192.168.100.5:19002/GetBudget?userid=' + userid);
         const expense = await response.json();
         setBudgetData(expense[0]);
+        //console.log("data")
+        //console.log(typeof(expense[1][0]["sum"]))
     }
 
     const UpdateBudget= () => {
@@ -32,7 +81,7 @@ export default function Budget()
         else
         {
             //send data to backend
-            fetch('http://192.168.43.89:19002/UpdateBudget', {
+            fetch('http://192.168.100.5:19002/UpdateBudget', {
               method: 'post',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({
@@ -49,8 +98,12 @@ export default function Budget()
     }
 
     return (
-        
     <View style={{flex: 1,}}>
+         <View style = {styles.prediction}>
+           <Text style = {styles.text2}>Your predicted this month budget:{"\n"}
+           <Text style = {styles.text3}>        RM{result}</Text>
+           </Text>
+        </View>
         <View style={globalStyles.header}></View>
         <View style={styles.background}>
             <SafeAreaView style={styles.body}>
@@ -270,5 +323,25 @@ const styles = StyleSheet.create
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5
+    },
+
+    prediction:{
+        width:230,
+        height:60,
+        top:40,
+        left:75,
+        backgroundColor: '#ECF0F9',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin:7,
+        borderRadius: 10,
+    },
+    text3:{
+        alignItems: 'center',
+        fontSize: 20,
+        fontWeight: 'bold',
+        padding:10,
+        //letterSpacing: 2,
+        //margin:20,
     },
 })
