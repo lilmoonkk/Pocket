@@ -10,9 +10,7 @@ import bottomNavigator from './bottomNavigator';
 import Login from './Authentication/SignUp';
 import ChangePassword from './Authentication/ChangePassword';
 import Budget from './goal/Budget';
-import Goal from './goal/Goal';
 import Report from './goal/report';
-
 import Goal from './goal/goal';
 const Stack = createNativeStackNavigator();
 
