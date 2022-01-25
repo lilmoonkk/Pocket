@@ -2,9 +2,8 @@ import React, {useEffect, useState} from 'react'
 import { ScrollView, StyleSheet, Text, TextInput, Image, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/core'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import {auth} from '../firebase';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
+import { auth } from '../firebase';
+import { MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
 
 const SignUp = () => {
     const topTab = createMaterialTopTabNavigator();

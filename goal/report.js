@@ -22,7 +22,7 @@ export default function Report(){
             tabBarInactiveTintColor: 'black',
             tabBarStyle: {
               elevation: 2,
-              backgroundColor: "#FFD6A5",
+              backgroundColor: "#A0C4FF",
               marginBottom: 30,
             }}}>
           <topTab.Screen name="Daily" component={daily} initialParams={{userid: userid}}/>
@@ -87,13 +87,13 @@ function daily()
   };
 
   const fetchSaving = async()=>{
-    const response = await fetch('http://192.168.0.12:19002/GetSaving?userid=' + userid);
+    const response = await fetch('http://192.168.43.89:19002/GetSaving?userid=' + userid);
     const saving = await response.json();
     setSaving(saving[0].amount.toFixed(2));
   }
 
   const fetchIncomeData = async()=>{
-    const response = await fetch('http://192.168.0.12:19002/GetIncome?userid=' + userid + '&day=' + day + '&month=' + month + '&year=' + year);
+    const response = await fetch('http://192.168.43.89:19002/GetIncome?userid=' + userid + '&day=' + day + '&month=' + month + '&year=' + year);
     const income = await response.json();
     setIncomeData(income[0]);
     if (income[1][0].sum == null){
@@ -105,7 +105,7 @@ function daily()
   }
 
   const fetchExpenseData = async()=>{
-    const response = await fetch('http://192.168.0.12:19002/GetExpense?userid=' + userid + '&day=' + day + '&month=' + month + '&year=' + year);
+    const response = await fetch('http://192.168.43.89:19002/GetExpense?userid=' + userid + '&day=' + day + '&month=' + month + '&year=' + year);
     const expense = await response.json();
     setExpenseData(expense[0]);
     if (expense[1][0].sum == null){
@@ -118,123 +118,143 @@ function daily()
   }
 
   const fetchBudgetCapacity = async()=>{
-    const response = await fetch('http://192.168.0.12:19002/GetBudgetCapacity?userid=' + userid + '&month=' + month + '&year=' + year);
+    const response = await fetch('http://192.168.43.89:19002/GetBudgetCapacity?userid=' + userid + '&month=' + month + '&year=' + year);
     const budgetCapacity = await response.json();
     setBCData(budgetCapacity);
   }
 
   return (
-    <View style={{paddingTop: 30}}>
-      <TouchableOpacity
-        style={{alignItems:'flex-end'}}
-        onPress = {() => {
-        setCalenderModalVisible(true);}}>
-        <MaterialCommunityIcons name="calendar" size={26} />
-      </TouchableOpacity>
-      <Text>Saving you've got by far:</Text>
-      <Text>RM {saving}</Text>
-      <Text>Income</Text>
-      {sumIncomeData == null ? <Text>Null</Text> :<Text>Total (RM) : {sumIncomeData}</Text>} 
-      <FlatList
-          horizontal = {true}
-          data = {incomeData}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem = {({item}) =>
-            <View style={styles.income}>
-                <Text style={{color:'#000', fontWeight:'bold'}}>{item.time}</Text>
-                <Text style={{color:'#000'}}>{item.desc}</Text>
-                <Text style={{color:'#000'}}>RM {item.amount.toFixed(2)}</Text>
-            </View>}
-      />
-      <Text>Expenses</Text>
-      {sumExpenseData == null ? <Text>Null</Text> :<Text>Total (RM) : {sumExpenseData}</Text>} 
-      <FlatList
-          horizontal = {true}
-          data = {expenseData}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem = {({item}) =>
-          <View style={styles.income}>
-              <Text style={{color:'#000', fontWeight:'bold'}}>{item.time}</Text>
-              <Text style={{color:'#000'}}>{item.desc}</Text>
-              <Text style={{color:'#000'}}>{item.category}</Text>
-              <Text style={{color:'#000'}}>RM {item.amount.toFixed(2)}</Text>
+    <View style={{flex: 1, backgroundColor:"#A0C4FF",}}>
+      <View style = {styles.body}>
+        <View style = {styles.savingContainer}>
+          <View>
+            <Text style = {styles.text}>Saving you've got by far:</Text>
+            <Text style = {styles.text}> RM {saving}</Text>
           </View>
-          }
-      />
-      {showBudgetCapacity?<Text>Budget Capacity</Text>:null}
-      <FlatList
-          style={{opacity: showBudgetCapacity==true?1: 0}}
-          horizontal = {false}
-          data = {budgetCapacityData}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem = {({item}) =>
-          <View style={styles.income}>
-              <Text style={{color:'#000', fontWeight:'bold'}}>{item.category} (RM): {item.expense.toFixed(2)}/{item.budget.toFixed(2)}</Text>
-              <ProgressBar progress={item.percentage == null?1:item.percentage} color={item.percentage >= 1 || item.percentage == null ?Colors.red800:Colors.blue100} />
+          <View style={styles.calendar}>
+            <TouchableOpacity
+              onPress = {() => {
+                setCalenderModalVisible(true);}}>
+              <MaterialCommunityIcons name="calendar" size={30} />
+            </TouchableOpacity>
           </View>
-          }
-      />
-      <Modal
-        transparent = {true}
-        backdropColor={'green'}
-        backdropOpacity= {1}
-        visible = {CalenderModalVisible}
-        >
-        <View style={styles.modal}>
-        <CalendarPicker
-          startFromMonday={true}
-          allowRangeSelection={false}
-          minDate={new Date(2021, 5, 1)}
-          maxDate={new Date(2050, 6, 3)}
-          
-          weekdays={
-            [
-              'Mon', 
-              'Tue', 
-              'Wed', 
-              'Thur', 
-              'Fri', 
-              'Sat', 
-              'Sun'
-            ]}
-          months={[
-            'January',
-            'Febraury',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December',
-          ]}
-          previousTitle="Previous"
-          nextTitle="Next"
-          todayBackgroundColor="#e6ffe6"
-          selectedDayColor="#66ff33"
-          selectedDayTextColor="#000000"
-          scaleFactor={375}
-          width={350}
-          onDateChange={onDateChange}
-        />
-        <Text style = {{margin: 0}} onPress = {() => {
-          fetchSaving();
-          fetchIncomeData();
-          fetchExpenseData();
-          fetchBudgetCapacity(); 
-          toggleBudgetCapacity();
-          setCalenderModalVisible(false);}}>
-          OK
-        </Text>
-        <Text style = {{margin: 10}} onPress = {() => {
-          setCalenderModalVisible(false);}}>
-          Cancel
-        </Text>
         </View>
-      </Modal>
+        
+        <View style = {{paddingLeft: 15,}}>
+          <Text style = {styles.title}>Income</Text>
+          {sumIncomeData == null ? <Text style={styles.text}>Null</Text> :<Text style = {styles.text}>Total: RM {sumIncomeData}</Text>} 
+          <FlatList
+              horizontal = {true}
+              data = {incomeData}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem = {({item}) =>
+                <View style={styles.income}>
+                    <Text style={styles.title}>{item.time}</Text>
+                    <Text style={styles.text}>{item.desc}</Text>
+                    <Text style={styles.text}> RM {item.amount.toFixed(2)}</Text>
+                </View>}
+          />
+          
+          <Text style = {styles.title}>Expenses</Text>
+          {sumExpenseData == null ? <Text style={styles.text}>Null</Text> :<Text style={styles.text}>Total (RM) : {sumExpenseData}</Text>} 
+          <FlatList
+              horizontal = {true}
+              data = {expenseData}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem = {({item}) =>
+              <View style={styles.income}>
+                  <Text style={styles.title}>{item.time}</Text>
+                  <Text style={styles.text}>{item.desc}</Text>
+                  <Text style={styles.text}>{item.category}</Text>
+                  <Text style={styles.text}> RM {item.amount.toFixed(2)}</Text>
+              </View>
+              }
+          />
+
+          {showBudgetCapacity?<Text style = {styles.title}>Budget Capacity</Text>:null}
+          <FlatList
+              style={{opacity: showBudgetCapacity==true?1: 0}}
+              horizontal = {false}
+              data = {budgetCapacityData}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem = {({item}) =>
+              <View style={styles.budget}>
+                  <Text style={styles.title}>{item.category} (RM): {item.expense.toFixed(2)}/{item.budget.toFixed(2)}</Text>
+                  <ProgressBar style = {styles.progress} progress={item.percentage == null?1:item.percentage} color={item.percentage >= 1 || item.percentage == null ?Colors.red800:Colors.blue800} />
+              </View>
+              }
+          />
+        </View>
+        
+        <Modal
+          transparent = {true}
+          backdropColor={'green'}
+          backdropOpacity= {1}
+          visible = {CalenderModalVisible}
+          >
+          <View style = {styles.modal_container}>
+            <View style={styles.modal}>
+              <CalendarPicker
+                startFromMonday={true}
+                allowRangeSelection={false}
+                minDate={new Date(2021, 5, 1)}
+                maxDate={new Date(2050, 6, 3)}
+                
+                weekdays={
+                  [
+                    'Mon', 
+                    'Tue', 
+                    'Wed', 
+                    'Thur', 
+                    'Fri', 
+                    'Sat', 
+                    'Sun'
+                  ]}
+                months={[
+                  'January',
+                  'Febraury',
+                  'March',
+                  'April',
+                  'May',
+                  'June',
+                  'July',
+                  'August',
+                  'September',
+                  'October',
+                  'November',
+                  'December',
+                ]}
+                previousTitle="Previous"
+                nextTitle="Next"
+                todayBackgroundColor="#e6ffe6"
+                selectedDayColor="#66ff33"
+                selectedDayTextColor="#000000"
+                scaleFactor={375}
+                width={330}
+                textStyle = {{fontSize: 16}}
+                onDateChange={onDateChange}
+              />
+              <View style = {styles.buttonContainer}>
+                <Text style = {styles.button} 
+                  onPress = {() => {
+                  fetchSaving();
+                  fetchIncomeData();
+                  fetchExpenseData();
+                  fetchBudgetCapacity(); 
+                  toggleBudgetCapacity();
+                  setCalenderModalVisible(false);
+                  }}>OK</Text>
+                <Text style = {styles.button} 
+                  onPress = {() => {
+                    setCalenderModalVisible(false);}}>
+                  Cancel</Text>
+              </View>
+          </View>
+          
+          </View>
+        </Modal>
+      </View>
+      
     </View>
   )
 }
@@ -249,10 +269,10 @@ function monthly()
 const styles = StyleSheet.create({
   header: {
     marginTop: 40,
-    height: 150,
-    backgroundColor: "#FFD6A5",
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    height: 170,
+    backgroundColor: "#A0C4FF",
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
     shadowColor: 'black',
     shadowOpacity: 1,
     shadowOffset: {width: 1, height: 3},
@@ -263,29 +283,56 @@ const styles = StyleSheet.create({
     marginTop: -150,
     marginStart: 20,
     marginEnd: 20,
-    marginBottom: 20,
+    marginBottom: 10,
     elevation: 4,
   },
   body: {
-      flex:1,
-      justifyContent: 'center',
-      alignItems: 'center',
+    flex: 1, 
+    backgroundColor:'white',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    elevation: 4,
+  },
+  savingContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    height: 70,
+    padding : 15,
+  },
+  title: {
+    fontSize: 16, 
+    color: '#000000', 
+    fontWeight: 'bold'
   },
   text:{
-      fontSize: 24,
-      lineHeight: 24,
+      fontSize: 16,
       color: '#000000'
   },
+  calendar: {
+    padding: 5, 
+    backgroundColor: "#A0C4FF", 
+    alignItems: 'flex-end',
+    borderRadius: 15,
+  },
+  income: {
+    borderWidth: 2,
+    margin: 5,
+    padding: 5,
+    borderRadius: 10,
+    borderColor: "#A0C4FF",
+  },
+  modal_container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   modal: {
-    marginTop: 150,
-    marginLeft: 10,
-    marginRight: 10,
-    height: 410,
     backgroundColor: "white",
     borderRadius: 20,
-    paddingTop: 30,
-    //paddingLeft: 20,
-    alignItems: "center",
+    padding: 5,
+    width: 350,
+    alignItems: "flex-start",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -293,6 +340,32 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
-  }
+    elevation: 5,
+  },
+  budget: {
+    borderWidth: 2,
+    marginTop: 5,
+    padding: 5,
+    borderRadius: 10,
+    borderColor: "#A0C4FF",
+    width: '90%',
+  },
+  progress: {
+    height: 10,
+    borderRadius: 10,
+    margin: 10,
+  },
+  buttonContainer:{
+    flex: 1,
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    marginTop: 50,
+  },
+  button:{
+    textAlign: 'center',
+    padding: 15,
+    fontSize: 16,
+  },
 })

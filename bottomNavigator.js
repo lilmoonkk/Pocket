@@ -6,9 +6,7 @@ import EditProfile from './Authentication/EditProfile';
 import Budget from './goal/Budget';
 import Report from './goal/report';
 import Goal from './goal/goal';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons'; 
+import { MaterialCommunityIcons, MaterialIcons, FontAwesome5, Foundation} from '@expo/vector-icons';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -64,9 +62,9 @@ export default function bottomNavigator() {
                 component={Report}
                 initialParams={{userid: userid}}
                 options={{
-                tabBarLabel: 'Goal',
+                tabBarLabel: 'Report',
                 tabBarIcon: ({ color }) => (
-                    <MaterialIcons name="event-note" color={color} size={26} />
+                    <Foundation name="clipboard-notes" color={color} size={26} />
                 ),
                 }}
             />

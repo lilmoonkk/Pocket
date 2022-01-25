@@ -39,9 +39,9 @@ export default function Budget()
     useEffect(() => {
         async function predict(){
             if (isTfReady) {
-            const response = await fetch('http://192.168.100.5:19002/GetLastMonthIncome?userid=' + userid + '&month=' + month + '&year=' + year);
+            const response = await fetch('http://192.168.43.89:19002/GetLastMonthIncome?userid=' + userid + '&month=' + month + '&year=' + year);
             const lmincome = await response.json()
-            const response2 = await fetch('http://192.168.100.5:19002/GetProfile?userid=' + userid);
+            const response2 = await fetch('http://192.168.43.89:19002/GetProfile?userid=' + userid);
             const profile = await response2.json();
             var lm_income = lmincome[0]["sum"];
             console.log(lm_income)
@@ -81,7 +81,7 @@ export default function Budget()
       
 
     const fetchBudgetData = async()=>{
-        const response = await fetch('http://192.168.100.5:19002/GetBudget?userid=' + userid);
+        const response = await fetch('http://192.168.43.89:19002/GetBudget?userid=' + userid);
         const expense = await response.json();
         setBudgetData(expense[0]);
         //console.log("data")
@@ -96,7 +96,7 @@ export default function Budget()
         else
         {
             //send data to backend
-            fetch('http://192.168.100.5:19002/UpdateBudget', {
+            fetch('http://192.168.43.89:19002/UpdateBudget', {
               method: 'post',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({
@@ -119,11 +119,10 @@ export default function Budget()
         <View style={globalStyles.background}>
             <Text style = {styles.header}> Budget </Text>
             <SafeAreaView style={styles.body}>
-         <View style = {styles.prediction}>
-           <Text style = {styles.text2}>Your predicted this month budget:{"\n"}
-           <Text style = {styles.text3}>        RM{result}</Text>
-           </Text>
-            </View>
+                <View style = {{alignItems: 'center', padding: 10}}>
+                    <Text style = {{fontWeight: 'bold', fontSize: 18}}>Predicted Budget:</Text>
+                    <Text style = {{fontSize: 18}}> RM{result}</Text>    
+                </View>
                 <FlatList
                     horizontal = {false}
                     data = {budgetData}
@@ -131,8 +130,8 @@ export default function Budget()
                     renderItem = {({item}) =>
                     <View style={styles.detailContainer}>
                         <View style = {styles.details}>
-                            <Text style={{color:'#000', fontWeight:'bold'}}>{item.category}</Text>
-                            <Text style={{color:'#000'}}>RM {item.amount.toFixed(2)}</Text>
+                            <Text style={{color:'#000', fontWeight:'bold', fontSize: 16}}>{item.category}</Text>
+                            <Text style={{color:'#000', fontSize: 16}}>RM {item.amount.toFixed(2)}</Text>
                         </View>
                         <View style = {styles.details}>
                             <TouchableOpacity
@@ -259,8 +258,7 @@ const styles = StyleSheet.create
     prediction:{
         width:230,
         height:60,
-        top:10,
-        left:5,
+        borderWidth: 1,
         backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
@@ -268,7 +266,7 @@ const styles = StyleSheet.create
         borderRadius: 10,
     },
     text3:{
-        alignItems: 'center',
+        alignSelf: 'center',
         fontSize: 20,
         fontWeight: 'bold',
         padding:10,

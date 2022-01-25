@@ -5,7 +5,7 @@ import { Alert, Modal, SafeAreaView, FlatList, StyleSheet, Text, Image, ScrollVi
 import { auth } from './firebase';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import { globalStyles } from './styles/global';
 
 export default function MainPage(){
