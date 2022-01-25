@@ -44,8 +44,19 @@ export default function Budget()
             const response2 = await fetch('http://192.168.100.5:19002/GetProfile?userid=' + userid);
             const profile = await response2.json();
             var lm_income = lmincome[0]["sum"];
+            console.log(lm_income)
             var fixspend = profile[0].fixedspending.toString();
-            console.log(profile[0].fixedspending)
+            console.log(typeof(fixspend))
+            if(lm_income-fixspend > 20000){
+                lm_income = lm_income * 0.5
+            }
+            else if(lm_income-fixspend > 10000){
+                lm_income = lm_income * 0.6
+            }
+            else if(lm_income - fixspend > 5000){
+                lm_income = lm_income * 0.7
+            }
+            console.log(lm_income)
             lm_income = (lm_income-670)/(66395-670)
             fixspend = (fixspend-418)/(1621-418)
             const x = tf.tensor2d([[lm_income,fixspend]])
@@ -56,6 +67,7 @@ export default function Budget()
             //Predict result
             var result = await model.predict(x).dataSync()
             result = parseFloat(result).toFixed(2)
+            console.log(result)
             setResult(result)
         }
     }
