@@ -47,7 +47,9 @@ function daily()
   const [year, setYear] = useState(new Date().getFullYear());
   const [saving, setSaving] = useState("");
   const [incomeData, setIncomeData] = useState("");
+  const [sumIncomeData, setSumIncomeData] = useState("");
   const [expenseData, setExpenseData] = useState("");
+  const [sumExpenseData, setSumExpenseData] = useState("");
   const [budgetCapacityData, setBCData] = useState("");
   const [showBudgetCapacity, setBCVisible] = useState(true);
 
@@ -94,12 +96,25 @@ function daily()
     const response = await fetch('http://192.168.0.12:19002/GetIncome?userid=' + userid + '&day=' + day + '&month=' + month + '&year=' + year);
     const income = await response.json();
     setIncomeData(income[0]);
+    if (income[1][0].sum == null){
+      setSumIncomeData(null);
+    }
+    else{
+      setSumIncomeData(income[1][0].sum.toFixed(2));
+    }
   }
 
   const fetchExpenseData = async()=>{
     const response = await fetch('http://192.168.0.12:19002/GetExpense?userid=' + userid + '&day=' + day + '&month=' + month + '&year=' + year);
     const expense = await response.json();
     setExpenseData(expense[0]);
+    if (expense[1][0].sum == null){
+      setSumExpenseData(null);
+    }
+    else{
+      setSumExpenseData(expense[1][0].sum.toFixed(2));
+    }
+    
   }
 
   const fetchBudgetCapacity = async()=>{
@@ -119,6 +134,7 @@ function daily()
       <Text>Saving you've got by far:</Text>
       <Text>RM {saving}</Text>
       <Text>Income</Text>
+      {sumIncomeData == null ? <Text>Null</Text> :<Text>Total (RM) : {sumIncomeData}</Text>} 
       <FlatList
           horizontal = {true}
           data = {incomeData}
@@ -131,6 +147,7 @@ function daily()
             </View>}
       />
       <Text>Expenses</Text>
+      {sumExpenseData == null ? <Text>Null</Text> :<Text>Total (RM) : {sumExpenseData}</Text>} 
       <FlatList
           horizontal = {true}
           data = {expenseData}
@@ -203,12 +220,16 @@ function daily()
           width={350}
           onDateChange={onDateChange}
         />
-        <Text style = {{margin: 30}} onPress = {() => {
+        <Text style = {{margin: 0}} onPress = {() => {
           fetchSaving();
           fetchIncomeData();
           fetchExpenseData();
           fetchBudgetCapacity(); 
           toggleBudgetCapacity();
+          setCalenderModalVisible(false);}}>
+          OK
+        </Text>
+        <Text style = {{margin: 10}} onPress = {() => {
           setCalenderModalVisible(false);}}>
           Cancel
         </Text>
