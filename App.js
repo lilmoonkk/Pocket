@@ -10,6 +10,7 @@ import bottomNavigator from './bottomNavigator';
 import Login from './Authentication/SignUp';
 import ChangePassword from './Authentication/ChangePassword';
 import Budget from './goal/Budget';
+import Report from './goal/report';
 import Goal from './goal/goal';
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,7 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} name="MainPage" component={bottomNavigator} />
         
         <Stack.Screen options={{ headerShown: false }} name="Goal" component={Goal} />
+        <Stack.Screen options={{ headerShown: false }} name="Report" component={Report} />
       </Stack.Navigator>
     </NavigationContainer>
   );

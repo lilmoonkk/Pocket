@@ -18,6 +18,7 @@ const UpdateGoal = require("./routes/UpdateGoal")
 const GetProfile = require("./routes/GetProfile")
 const UpdateProfile = require("./routes/UpdateProfile")
 const GetSaving = require("./routes/GetSaving")
+const GetBudgetCapacity = require("./routes/GetBudgetCapacity")
 
 var app = express();
 app.use(express.json());
@@ -40,5 +41,6 @@ app.use("/UpdateGoal", UpdateGoal);
 app.use("/GetProfile", GetProfile);
 app.use("/UpdateProfile", UpdateProfile);
 app.use("/GetSaving", GetSaving);
+app.use("/GetBudgetCapacity", GetBudgetCapacity);
 
 app.listen(19002)

@@ -4,6 +4,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import MainPage from './MainPage';
 import EditProfile from './Authentication/EditProfile';
 import Budget from './goal/Budget';
+import Report from './goal/report';
 import Goal from './goal/goal';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -58,6 +59,17 @@ export default function bottomNavigator() {
                 }}
             />
 
+            <Tab.Screen
+                name="Report"
+                component={Report}
+                initialParams={{userid: userid}}
+                options={{
+                tabBarLabel: 'Goal',
+                tabBarIcon: ({ color }) => (
+                    <MaterialIcons name="event-note" color={color} size={26} />
+                ),
+                }}
+            />
             <Tab.Screen
                 name="Profile"
                 component={EditProfile}
