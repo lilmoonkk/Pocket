@@ -12,13 +12,13 @@ export const globalStyles = StyleSheet.create({
         shadowOffset: {width: 1, height: 3},
         elevation: 4,
     },
-
+    
     background:{
         flex: 1,
         marginTop: -150,
         marginStart: 20,
         marginEnd: 20,
-        marginBottom: 20,
+        marginBottom: 10,
         elevation: 4,
     },
 
@@ -75,7 +75,7 @@ export const globalStyles = StyleSheet.create({
     },
     
     label:{
-        marginTop: 15,
+        marginTop: 10,
         fontSize: 16,
     },
 
@@ -92,7 +92,8 @@ export const globalStyles = StyleSheet.create({
         flexDirection: 'row',
         alignSelf: 'flex-end',
         alignItems: 'flex-end',
-        justifyContent: 'space-around',
+        justifyContent: 'flex-end',
+        marginTop: 50,
     },
 
     button:{
@@ -100,15 +101,18 @@ export const globalStyles = StyleSheet.create({
         padding: 15,
         fontSize: 16,
     },
+    
+    modal_container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 
     modal: {
-        marginTop: 150,
-        marginLeft: 50,
-        marginRight: 50,
-        height: 300,
         backgroundColor: "white",
         borderRadius: 20,
-        padding: 10,
+        padding: 15,
+        width: 320,
         alignItems: "flex-start",
         shadowColor: "#000",
         shadowOffset: {

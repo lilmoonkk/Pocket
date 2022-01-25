@@ -8,18 +8,20 @@ Router.post('/', (req, res) => {
         userid,
         username,
         email,
-        phoneno
+        phoneno,
+        fixedspending
     } = req.body;
  
     var data = {
         userid : userid,
         username : username,
         email : email,
-        phoneno : phoneno
+        phoneno : phoneno,
+        fixedspending: fixedspending
     };
    
-    mysqlConnection.query("UPDATE user SET user.username = ?, user.email = ?, user.phoneno = ? WHERE user.userid = ?;", 
-    [data.username, data.email, data.phoneno, data.userid],
+    mysqlConnection.query("UPDATE user SET user.username = ?, user.email = ?, user.phoneno = ?, user.fixedspending = ? WHERE user.userid = ?;", 
+    [data.username, data.email, data.phoneno, data.fixedspending, data.userid],
        function(err, rows) {
           if (err) {
              //If error

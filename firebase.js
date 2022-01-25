@@ -22,5 +22,6 @@ if(firebase.apps.length === 0){
 }
 
 const auth = firebase.auth()
+const emailcred = firebase.auth
 
-export { auth };
+export { auth, emailcred };

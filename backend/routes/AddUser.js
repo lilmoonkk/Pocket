@@ -9,7 +9,8 @@ Router.post('/', (req, res) => {
         username,
         identitycardno,
         email,
-        phoneno
+        phoneno,
+        fixedspending
     } = req.body;
  
     var data = {
@@ -17,11 +18,12 @@ Router.post('/', (req, res) => {
         username : username,
         identitycardno : identitycardno,
         email : email,
-        phoneno : phoneno
+        phoneno : phoneno,
+        fixedspending: fixedspending
     };
  
-    var query = mysqlConnection.query("INSERT INTO user VALUES (?,?,?,?,?) ", 
-    [data.userid, data.username, data.identitycardno, data.email, data.phoneno],
+    var query = mysqlConnection.query("INSERT INTO user VALUES (?,?,?,?,?,?) ", 
+    [data.userid, data.username, data.identitycardno, data.email, data.phoneno, data.fixedspending],
        function(err, rows) {
           if (err) {
              //If error
