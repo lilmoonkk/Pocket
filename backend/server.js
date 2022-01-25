@@ -16,6 +16,7 @@ const GetGoal = require("./routes/GetGoal")
 const DeleteGoal = require("./routes/DeleteGoal")
 const UpdateGoal = require("./routes/UpdateGoal")
 const GetSaving = require("./routes/GetSaving")
+const GetBudgetCapacity = require("./routes/GetBudgetCapacity")
 
 var app = express();
 app.use(express.json());
@@ -36,5 +37,6 @@ app.use("/GetGoal", GetGoal);
 app.use("/DeleteGoal", DeleteGoal);
 app.use("/UpdateGoal", UpdateGoal);
 app.use("/GetSaving", GetSaving);
+app.use("/GetBudgetCapacity", GetBudgetCapacity);
 
 app.listen(19002)
