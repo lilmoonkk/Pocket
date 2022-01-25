@@ -41,8 +41,11 @@ export default function Budget()
             if (isTfReady) {
             const response = await fetch('http://192.168.100.5:19002/GetLastMonthIncome?userid=' + userid + '&month=' + month + '&year=' + year);
             const lmincome = await response.json()
+            const response2 = await fetch('http://192.168.100.5:19002/GetProfile?userid=' + userid);
+            const profile = await response2.json();
             var lm_income = lmincome[0]["sum"];
-            var fixspend = 540;
+            var fixspend = profile[0].fixedspending.toString();
+            console.log(profile[0].fixedspending)
             lm_income = (lm_income-670)/(66395-670)
             fixspend = (fixspend-418)/(1621-418)
             const x = tf.tensor2d([[lm_income,fixspend]])
@@ -104,6 +107,11 @@ export default function Budget()
         <View style={globalStyles.background}>
             <Text style = {styles.header}> Budget </Text>
             <SafeAreaView style={styles.body}>
+         <View style = {styles.prediction}>
+           <Text style = {styles.text2}>Your predicted this month budget:{"\n"}
+           <Text style = {styles.text3}>        RM{result}</Text>
+           </Text>
+            </View>
                 <FlatList
                     horizontal = {false}
                     data = {budgetData}
@@ -239,9 +247,9 @@ const styles = StyleSheet.create
     prediction:{
         width:230,
         height:60,
-        top:40,
-        left:75,
-        backgroundColor: '#ECF0F9',
+        top:10,
+        left:5,
+        backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
         margin:7,
