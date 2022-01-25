@@ -1,120 +1,147 @@
-import React, {useState} from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { useNavigation } from '@react-navigation/core'
-import { auth } from '../firebase'
+import React, {useState} from 'react';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/core';
+import { auth } from '../firebase';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const ResetPassword = () => {
-
     const [email, setEmail] = useState('')
-
     const navigation = useNavigation()
 
     function sendResetEmail() {
-        auth
-            .sendPasswordResetEmail(email)
-            .catch(error => alert(error.message))
+      if (email == ''){
+        alert("Please enter email!")
+      }
+      auth
+          .sendPasswordResetEmail(email)
+          .catch(error => alert(error.message))
     }
 
     return (
-        
-        <View style={styles.container}>
-            <View style={styles.headerContainer}>
-                <Text style={styles.header}>Forgot {'\n'}Password ?</Text>
-            </View>
-
+      <View style = {{flex: 1}}>
+        <View style = {styles.headerContainer}></View>
+        <View style = {styles.background}>
+          <Text style={styles.header}>Forgot {'\n'} Password ?</Text>
+          <View style = {styles.body}>
             <Text style={styles.description}>
-                    Please Enter Your Registered Email Address{'\n'}
-                    We will send  a verification code to your registered email.
-                </Text>
+              Please Enter Your Registered Email Address{'\n'}
+              We will send  a verification code to your registered email.
+            </Text>
+            <View style = {{flexDirection: 'row'}}>
+              <MaterialCommunityIcons 
+                style = {styles.icon} 
+                name="email" 
+                size={40} color="black" />
+              <TextInput
+                placeholder="Email"
+                value={email}
+                autoComplete='email'
+                keyboardType='email-address'
+                onChangeText={text => setEmail(text)}
+                style={styles.input}
+              />
+            </View>
+            <View style = {styles.buttonContainer}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={sendResetEmail}
+                style={styles.button}
+              >
+                  <Text style={styles.buttonText}>SEND EMAIL</Text>
+              </TouchableOpacity>
 
-            <TextInput
-                    placeholder="Email"
-                    value={email}
-                    onChangeText={text => setEmail(text)}
-                    style={styles.input}
-            />
-
-            <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={sendResetEmail}
-                    style={styles.button}
-                    
-            >
-                <Text style={styles.buttonText}>Confirm</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={() => navigation.replace('Login')}
-                    style={styles.button2}
-            >
-                <Text style={styles.buttonText}>Cancel</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => navigation.replace('SignUp')}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>CANCEL</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
+      </View>
     )
 }
 
 export default ResetPassword
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
     headerContainer: {
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
-        borderBottomColor: 'black',
-        backgroundColor: 'rgba(249, 229, 232, 1)',
-        flex: 1,
-        justifyContent: 'flex-end',
-        marginBottom: 30,
-        width: '100%',
+      marginTop: 40,
+      height: 170,
+      backgroundColor: "#FFCFD7",
+      borderBottomLeftRadius: 15,
+      borderBottomRightRadius: 15,
+      shadowColor: 'black',
+      shadowOpacity: 1,
+      shadowOffset: {width: 1, height: 3},
+      elevation: 4,
+    },
+    background: {
+      flex: 1,
+      marginTop: -100,
+      marginStart: 20,
+      marginEnd: 20,
+      marginBottom: 10,
+      shadowColor: 'black',
+      shadowOpacity: 1,
+      shadowOffset: {width: 1, height: 3},
+      elevation: 4,
     },
     header: {
-        fontWeight: 'bold',
-        fontSize: 24,
-        textAlign: 'center',
-        marginBottom: 30,
+      fontWeight: 'bold',
+      fontSize: 24,
+      textAlign: 'center',
+    },
+    body: {
+      flex: 1,
+      marginTop: 10,
+      backgroundColor: 'white',
+      borderTopRightRadius: 10,
+      borderTopLeftRadius: 10,
     },
     description: {
-        fontWeight: 'bold',
-        fontSize: 11,
-        lineHeight:18,
-        alignItems: 'center',
-        left: 6,
+        fontSize: 14,
+        lineHeight: 18,
+        alignSelf: 'center',
+        padding: 10,
+        textAlign: 'center',
+        marginTop: 10,
+        color: 'black',
     },
     input: {
-        width:'80%',
+        width:'70%',
         backgroundColor: 'white',
         paddingHorizontal: 15,
         paddingVertical: 10,
-        borderRadius: 10,
-        marginTop: 60,
-        marginBottom: 50,
+        borderBottomWidth: 1,
+        marginTop: 80,
+        alignSelf: 'center',
+        fontSize: 16,
+    },
+    icon: { 
+      alignSelf: 'flex-end',
+      marginRight: 10,
+      marginLeft: 10,
+      width: 50,
+    },
+    buttonContainer:{
+      alignItems: 'center',
+      marginTop: 120,
     },
     button: {
         width: '90%',
         padding: 15,
-        borderRadius: 10,
+        borderRadius: 20,
         marginTop: 10,
         alignItems: 'center',
-        backgroundColor: 'rgba(255, 207, 215, 1)',
-    },
-    button2: {
-        width: '90%',
-        padding: 15,
-        borderRadius: 10,
-        marginTop: 10,
-        marginBottom: 10,
-        alignItems: 'center',
-        backgroundColor: 'rgba(255, 211, 218, 0.58)',
+        borderWidth: 2,
+        borderColor: "#FFCFD7",
     },
     buttonText:{
         color: 'black',
         fontWeight: 'bold',
         fontSize: 16,
     }
-
 })

@@ -3,6 +3,9 @@ import { useNavigation, useRoute } from '@react-navigation/core';
 import { Alert, Modal, SafeAreaView, FlatList, StyleSheet, Text, Image, ScrollView, View, TouchableOpacity, TextInput } from 'react-native';
 import {auth} from '../firebase';
 import { ProgressBar, Colors } from 'react-native-paper';
+import { AntDesign } from '@expo/vector-icons'; 
+import { globalStyles } from '../styles/global';
+
 export default function Goal() {
 
   const route = useRoute();
@@ -27,7 +30,7 @@ export default function Goal() {
   }, [])
 
   const fetchGoalData = async()=>{
-    const response = await fetch('http://192.168.0.12:19002/GetGoal?userid=' + userid);
+    const response = await fetch('http://192.168.43.89:19002/GetGoal?userid=' + userid);
     const goal = await response.json();
     //setIncomeData(JSON.stringify(income));
     setGoalData(goal[0]);
@@ -48,7 +51,7 @@ export default function Goal() {
   }
   
   const fetchSaving = async()=>{
-    const response = await fetch('http://192.168.0.12:19002/GetSaving?userid=' + userid);
+    const response = await fetch('http://192.168.43.89:19002/GetSaving?userid=' + userid);
     const saving = await response.json();
     setSaving(saving[0].amount.toFixed(2));
   }
@@ -61,7 +64,7 @@ export default function Goal() {
     else
     {
         //send data to backend
-        fetch('http://192.168.0.12:19002/UpdateGoal', {
+        fetch('http://192.168.43.89:19002/UpdateGoal', {
           method: 'post',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
@@ -83,7 +86,7 @@ export default function Goal() {
     }
     else{
         //send data to backend
-        fetch('http://192.168.0.12:19002/AddGoal', {
+        fetch('http://192.168.43.89:19002/AddGoal', {
           method: 'post',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
@@ -110,7 +113,7 @@ export default function Goal() {
       [
         {
           text: "DELETE",
-          onPress: () => fetch('http://192.168.0.12:19002/DeleteGoal', {
+          onPress: () => fetch('http://192.168.43.89:19002/DeleteGoal', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -135,61 +138,70 @@ export default function Goal() {
   }
 
   return(
-    <SafeAreaView style={{flex: 1, backgroundColor:'yellow', alignItems: 'center'}}>
-      
-      
+    <SafeAreaView style={{flex: 1}}>
+      <View style={styles.headerContainer}></View>
       <SafeAreaView style={styles.incomesContainer}>
-        <View>
-          <Text>Total Saving:</Text>
-          <Text>RM {saving}</Text>
-        </View>
-        <View style={styles.income} >
-            <Text>Now - Forever</Text>
-            <Text style={{color:'#000'}}>{emergencyFundData["desc"]}</Text>
-            <Text style={{color:'#000'}}>Target: RM {emergencyFundData["target"]}</Text>
-            <Text style={{color:'#000'}}>Now: RM {emergencyFundData["allocated"]}</Text>
-            <Text style={{color:'#000'}}>Progress:</Text>
-            <ProgressBar progress={emergencyFundData["percentage"]}  />
-            <TouchableOpacity
-            onPress = {() => openModalWithID(emergencyFundData["id"])}>
-              <Text>Edit</Text>
-            </TouchableOpacity>
-        </View>
-        
-        <FlatList
-        
-        horizontal = {false}
-        data = {goalData}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem = {({item}) =>
-        <View style={styles.income}>
+        <Text style = {styles.header}> Goal </Text>
+        <View style = {styles.body}>
+          <View style = {{alignItems: 'center'}}>
+            <Text style = {{fontWeight: 'bold', fontSize: 18}}>Total Saving:</Text>
+            <Text style = {{fontSize: 16}}> RM {saving}</Text>
+          </View>
+          <View style={styles.income} >
+            <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style = {styles.title}>Now - Forever</Text>
+              <TouchableOpacity
+                onPress = {() => openModalWithID(emergencyFundData["id"])}>
+                <AntDesign style = {{padding:5}} name="edit" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
             
-            <TouchableOpacity
-            onPress = {() => confirmDelete(item.id)}>
-            <Image source={require('../assets/trash.png')}
-            style={{width: 25, height: 25}}></Image></TouchableOpacity>
-            <Text style={{color:'#000'}}>Till {item.day}/{item.month}/{item.year}</Text>
-            <Text style={{color:'#000'}}>{item.desc}</Text>
-            <Text style={{color:'#000'}}>Target: RM {item.target.toFixed(2)}</Text>
-            <Text style={{color:'#000'}}>Now: RM {item.allocated.toFixed(2)}</Text>
-            <Text style={{color:'#000'}}>Progress:</Text>
-            <ProgressBar progress={item.percentage}  />
-            <TouchableOpacity
-            onPress = {() => openModalWithID(item.id)}>
-              <Text>Edit</Text>
+            <Text style={styles.title}>{emergencyFundData["desc"]}</Text>
+            <Text style={styles.text}>Target: RM {emergencyFundData["target"]}</Text>
+            <Text style={styles.text}>Now: RM {emergencyFundData["allocated"]}</Text>
+            <Text style={styles.text}>Progress:</Text>
+            <ProgressBar color = 'blue' style = {styles.progress} progress={emergencyFundData["percentage"]}  />  
+          </View>
+            
+          <FlatList
+            horizontal = {false}
+            data = {goalData}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem = {({item}) =>
+            <View style={styles.income}>
+              <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Text style={styles.title}>Till {item.day}/{item.month}/{item.year}</Text>
+                <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
+                  <TouchableOpacity
+                    onPress = {() => confirmDelete(item.id)}>
+                    <AntDesign style = {{padding:5}} name="delete" size={24} color="black" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress = {() => openModalWithID(item.id)}>
+                    <AntDesign style = {{padding:5}} name="edit" size={24} color="black" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <Text style={styles.title}>{item.desc}</Text>
+              <Text style={styles.text}>Target: RM {item.target.toFixed(2)}</Text>
+              <Text style={styles.text}>Now: RM {item.allocated.toFixed(2)}</Text>
+              <Text style={styles.text}>Progress:</Text>
+              <ProgressBar color = 'blue' style = {styles.progress} progress={item.percentage}  />  
+            </View>
+            }/>
+            <TouchableOpacity 
+              style={styles.addBtn}
+              onPress = {() => {
+                  setAGModalVisible(true);
+                }}>
+                <Image source={require('../assets/add_button.png')}
+                  style={{width:40,height:40}}></Image>
             </TouchableOpacity>
         </View>
-        }
-        />
+
+        
       </SafeAreaView>
-      <TouchableOpacity 
-      style={styles.addBtn}
-        onPress = {() => {
-          setAGModalVisible(true);
-        }}>
-        <Image source={require('../assets/add_button.png')}
-          style={{width:40,height:40}}></Image>
-      </TouchableOpacity>
+      
       <Modal
         transparent = {true}
         backdropColor={'green'}
@@ -198,28 +210,49 @@ export default function Goal() {
         onRequestClose = {() => {
 
         }}>
-        <View style = {styles.modal}>
-          <Text>Add Goal</Text>
-          <Text style = {{marginBottom: 10}}>Description</Text>
-          <TextInput style = {{borderBottomWidth: 1}} onChangeText = {setDescription}/>
-          <Text style = {{marginBottom: 10}}>Day</Text>
-          <TextInput style = {{borderBottomWidth: 1}} onChangeText = {setDay}/>
-          <Text style = {{marginBottom: 10}}>Month</Text>
-          <TextInput style = {{borderBottomWidth: 1}} onChangeText = {setMonth}/>
-          <Text style = {{marginBottom: 10}}>Year</Text>
-          <TextInput style = {{borderBottomWidth: 1}} onChangeText = {setYear}/>
-          <Text style = {{marginBottom: 10}}>Target</Text>
-          <TextInput style = {{borderBottomWidth: 1}} onChangeText = {setTarget}/>
-          <Text style = {{marginBottom: 10}}>Allocated</Text>
-          <TextInput style = {{borderBottomWidth: 1}} onChangeText = {setAllocated}/>
-          <Text 
-          style = {{margin: 30}} onPress = {() => {AddGoal(); fetchGoalData(); setAGModalVisible(false); }}>OK</Text>
-          
-          <Text onPress = {() => {
-            setAGModalVisible(false);
-          }}>CANCEL</Text>
+        <View style = {styles.modal_container}>
+          <View style = {styles.modal}>
+            <Text style = {globalStyles.modal_label}>Add Goal</Text>
+            <Text style = {globalStyles.label}>Description</Text>
+            <TextInput style = {globalStyles.input} onChangeText = {setDescription}/>
+            <View style = {{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+              <View style = {{flex: 1, flexDirection: 'column'}}>
+                <Text style = {globalStyles.label}>Day</Text>
+                <TextInput style = {styles.input} onChangeText = {setDay}/>
+              </View>
+              <View style = {{flex: 1, flexDirection: 'column'}}>
+                <Text style = {globalStyles.label}>Month</Text>
+                <TextInput style = {styles.input} onChangeText = {setMonth}/>
+              </View>
+              <View style = {{flex: 1, flexDirection: 'column'}}>
+                <Text style = {globalStyles.label}>Year</Text>
+                <TextInput style = {styles.input} onChangeText = {setYear}/>
+              </View>
+            </View>
+            
+            <Text style = {globalStyles.label}>Target</Text>
+            <TextInput style = {globalStyles.input} onChangeText = {setTarget}/>
+            <Text style = {globalStyles.label}>Allocated</Text>
+            <TextInput style = {globalStyles.input} onChangeText = {setAllocated}/>
+            <View style ={globalStyles.buttonContainer}>
+              <Text 
+                style = {globalStyles.button} 
+                onPress = {() => {
+                  AddGoal(); 
+                  fetchGoalData(); 
+                  setAGModalVisible(false); 
+                }}>SAVE</Text>
+              
+              <Text 
+                style = {globalStyles.button}
+                onPress = {() => { 
+                setAGModalVisible(false);
+              }}>CANCEL</Text>
+            </View>
+          </View>
         </View>
       </Modal>
+
       <Modal
         transparent = {true}
         backdropColor={'green'}
@@ -228,18 +261,31 @@ export default function Goal() {
         onRequestClose = {() => {
 
         }}>
-        <View style = {styles.modal}>
-          <Text>Please enter the amount you would like to add on for this goal:</Text>
-          <Text>(Enter -xx to extract allocated amount)</Text>
-          <Text style = {{marginBottom: 10}}>Amount(MYR)</Text>
-          <TextInput style = {{borderBottomWidth: 1}} onChangeText = {setAmount}/>
-          <Text 
-          style = {{margin: 30}} onPress = {() => {UpdateGoal(); fetchGoalData(); setUGModalVisible(false); }}>OK</Text>
-          
-          <Text onPress = {() => {
-            setUGModalVisible(false);
-          }}>CANCEL</Text>
+        <View style = {globalStyles.modal_container}>
+          <View style = {styles.modal}>
+            <Text style = {styles.title}>Please enter the amount you would like to add on for this goal:</Text>
+            <Text style = {styles.title}>(Enter -xx to extract allocated amount)</Text>
+            <Text style = {globalStyles.label}>Amount(MYR)</Text>
+            <TextInput style = {globalStyles.input} onChangeText = {setAmount}/>
+            <View style ={globalStyles.buttonContainer}>
+              <Text 
+                style = {globalStyles.button} 
+                onPress = {() => {
+                  UpdateGoal(); 
+                  fetchGoalData(); 
+                  setUGModalVisible(false); 
+                }}>SAVE</Text>
+              
+              <Text 
+                style = {globalStyles.button} 
+                onPress = {() => {
+                setUGModalVisible(false);
+              }}>CANCEL</Text>
+            </View>
+            
+          </View>
         </View>
+        
       </Modal>
       
     </SafeAreaView>
@@ -248,20 +294,41 @@ export default function Goal() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    height: 200,
-    backgroundColor: "#FFD6A5",
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+  headerContainer: {
+        height: 200,
+        marginTop: 40,
+        height: 170,
+        backgroundColor: '#B0B2FF',
+        borderBottomLeftRadius: 15,
+        borderBottomRightRadius: 15,
+        shadowColor: 'black',
+        shadowOpacity: 1,
+        shadowOffset: {width: 1, height: 3},
+        elevation: 4,
   },
-  
+  header: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 24,
+  },
+  body: {
+        flex: 1,
+        alignItems: 'center',
+        marginTop: 10,
+        backgroundColor: 'white',
+        borderTopRightRadius: 10,
+        borderTopLeftRadius: 10,
+  },
   addBtn: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
+    borderRadius: 30,
+    alignSelf: 'flex-end',
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: 'red',
-    justifyContent: 'flex-end',
-    left: 100
+    marginBottom: 5,
+    marginRight: 5,
   },
 
   welcome: {
@@ -270,15 +337,39 @@ const styles = StyleSheet.create({
     fontSize: 25
   },
 
+  title: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: 'black',
+    marginBottom: 5,
+    marginTop: 5,
+  },
+
+  text: {
+    fontSize: 16,
+    padding: 5,
+    color: 'black',
+  },
+
+  progress: {
+    height: 10,
+    borderRadius: 10,
+    margin: 10,
+  },
+
+  modal_container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   modal: {
-    marginTop: 150,
-    marginLeft: 50,
-    marginRight: 50,
-    height: 500,
+    width: 320,
+    maxHeight: 500,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
+    padding: 15,
+    alignItems: "flex-start",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -289,17 +380,35 @@ const styles = StyleSheet.create({
     elevation: 5
   },
 
+  input: {
+    width: '80%',
+    fontSize: 16,
+    alignSelf: "flex-start",
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+  },
+
   income: {
-    backgroundColor: "#9BF6FF",
-    width : '70%',
-    height : 200,
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    borderWidth: 1,
+    width : 300,
+    maxHeight: 150,
     padding : 10,
-    margin : 10
+    margin : 10,
+    borderRadius: 10,
   },
 
   incomesContainer: {
-    backgroundColor: 'purple',
-    width: '80%',
-    flex: 2
+        flex: 1,
+        marginTop: -100,
+        marginStart: 20,
+        marginEnd: 20,
+        marginBottom: 10,
+        shadowColor: 'black',
+        shadowOpacity: 1,
+        shadowOffset: {width: 1, height: 3},
+        elevation: 4,
   }
 });
