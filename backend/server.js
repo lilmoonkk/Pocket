@@ -21,7 +21,8 @@ const GetSaving = require("./routes/GetSaving")
 const GetBudgetCapacity = require("./routes/GetBudgetCapacity")
 const GetTotalIncome = require("./routes/GetTotalIncome")
 const GetTotalExpense = require("./routes/GetTotalExpense")
-
+const GetIncomePie = require("./routes/GetIncomePie")
+const GetExpensePie = require("./routes/GetExpensePie")
 
 var app = express();
 app.use(express.json());
@@ -47,5 +48,7 @@ app.use("/GetSaving", GetSaving);
 app.use("/GetBudgetCapacity", GetBudgetCapacity);
 app.use("/GetTotalIncome", GetTotalIncome);
 app.use("/GetTotalExpense", GetTotalExpense);
+app.use("/GetIncomePie", GetIncomePie);
+app.use("/GetExpensePie", GetExpensePie);
 
 app.listen(19002)

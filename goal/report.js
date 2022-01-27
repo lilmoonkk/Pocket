@@ -271,34 +271,83 @@ function monthly()
   const [incomeData, setIncomeData] = useState("");
   const [expenseData, setExpenseData] = useState("");
   const [saving, setSaving] = useState("");
-  const [cashFlow, setCashFlow] = useState("")
+  const [incomeBreakdown, setIB] = useState("")
+  const [expenseBreakdown, setEB] = useState("")
 
   useEffect(() => {
     fetchIncomeData();
     fetchSaving();
     fetchExpenseData();
-    setCashFlow(incomeData-expenseData);
+    fetchIBData();
+    fetchEBData();
   }, [])
 
   const fetchIncomeData = async()=>{
     const response = await fetch('http://192.168.0.12:19002/GetTotalIncome?userid=' + userid + '&month=' + month + '&year=' + year);
     const income = await response.json();
-    setIncomeData(income[0].sum.toFixed(2));
+    if (income[0].sum == null){
+      setIncomeData(null);
+    }
+    else{
+      setIncomeData(income[0].sum.toFixed(2));
+    }
+    //setIncomeData(income[0].sum.toFixed(2));
     //console.log(income[0].sum.toFixed(2))
   }
 
   const fetchSaving = async()=>{
     const response = await fetch('http://192.168.0.12:19002/GetSaving?userid=' + userid);
     const saving = await response.json();
-    setSaving(saving[0].amount.toFixed(2));
+    if (saving[0].amount == null){
+      setSaving(null);
+    }
+    else{
+      setSaving(saving[0].amount.toFixed(2));
+    }
+    //setSaving(saving[0].amount.toFixed(2));
   }
 
   const fetchExpenseData = async()=>{
     const response = await fetch('http://192.168.0.12:19002/GetTotalExpense?userid=' + userid + '&month=' + month + '&year=' + year);
     const expense = await response.json();
     //console.log(expense);
-    setExpenseData(expense[0].sum.toFixed(2));
+    if (expense[0].sum == null){
+      setExpenseData(null);
+    }
+    else{
+      setExpenseData(expense[0].sum.toFixed(2));
+    }
+    //setExpenseData(expense[0].sum.toFixed(2));
     
+  }
+
+  const fetchIBData = async()=>{
+    const response = await fetch('http://192.168.0.12:19002/GetIncomePie?userid=' + userid + '&month=' + month + '&year=' + year);
+    const income = await response.json();
+    if (income == null){
+      setIB(null);
+    }
+    else{
+      setIB(income);
+    }
+    //setIB(income);
+    //console.log(income);
+    //setTA(income.map(item => item.total));
+    //console.log(income.map(item => item.total));
+  }
+
+  const fetchEBData = async()=>{
+    const response = await fetch('http://192.168.0.12:19002/GetExpensePie?userid=' + userid + '&month=' + month + '&year=' + year);
+    const expense = await response.json();
+    if (expense == null){
+      setEB(null);
+    }
+    else{
+      setEB(expense);
+    }
+    //console.log(income);
+    //setTA(income.map(item => item.total));
+    //console.log(income.map(item => item.total));
   }
 
   return(
@@ -312,13 +361,39 @@ function monthly()
             </TouchableOpacity>
       </View>
       <Text>Total Income</Text>
-      <Text>RM {incomeData}</Text>
-      <Text>Total Saving</Text>
-      <Text>RM {saving}</Text>
+      {incomeData == null ? <Text style={styles.text}>Null</Text> :<Text style={styles.text}>RM {incomeData}</Text>} 
       <Text>Total Expense</Text>
-      <Text>RM {expenseData}</Text>
+      {expenseData == null ? <Text style={styles.text}>Null</Text> :<Text style={styles.text}>RM {expenseData}</Text>} 
       <Text>Cash Flow</Text>
-      <Text style = {{color: incomeData - expenseData<=0? 'red' : 'green'}}>RM {incomeData - expenseData}</Text>
+      <Text style = {{color: incomeData - expenseData<=0? 'red' : 'green'}}>{incomeData - expenseData<=0? '- ' : '+ '}RM {incomeData - expenseData}</Text>
+      <View style={{opacity: month==new Date().getMonth+1 && year==new Date().getFullYear?1: 0}}>
+        <Text>Total Saving</Text>
+        {saving == null ? <Text style={styles.text}>Null</Text> :<Text style={styles.text}>RM {saving}</Text>} 
+      </View>
+      <Text>Income Breakdown</Text>
+      <FlatList
+        horizontal = {false}
+        data = {incomeBreakdown}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem = {({item}) =>
+        <View style={styles.income}>
+            <Text style={styles.text}>{item.desc}</Text>
+            <Text style={styles.text}>{((item.total/incomeData).toFixed(2)) * 100} %</Text>
+        </View>
+        }
+      />
+      <Text>Spending Breakdown</Text>
+      <FlatList
+        horizontal = {false}
+        data = {expenseBreakdown}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem = {({item}) =>
+        <View style={styles.income}>
+            <Text style={styles.text}>{item.category}</Text>
+            <Text style={styles.text}>{((item.total/expenseData).toFixed(2)) * 100} %</Text>
+        </View>
+        }
+      />
       <Modal
           transparent = {true}
           backdropColor={'green'}
@@ -332,8 +407,13 @@ function monthly()
             />
             <Text style = {styles.button} 
               onPress = {() => {
+                fetchIncomeData();
+                fetchSaving();
+                fetchExpenseData();
+                fetchIBData();
+                fetchEBData();
                 setCalenderModalVisible(false);}}>
-              Cancel</Text>
+              Go</Text>
           </View>
         </View>
       </Modal>
