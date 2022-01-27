@@ -19,6 +19,9 @@ const GetProfile = require("./routes/GetProfile")
 const UpdateProfile = require("./routes/UpdateProfile")
 const GetSaving = require("./routes/GetSaving")
 const GetBudgetCapacity = require("./routes/GetBudgetCapacity")
+const GetTotalIncome = require("./routes/GetTotalIncome")
+const GetTotalExpense = require("./routes/GetTotalExpense")
+
 
 var app = express();
 app.use(express.json());
@@ -42,5 +45,7 @@ app.use("/GetProfile", GetProfile);
 app.use("/UpdateProfile", UpdateProfile);
 app.use("/GetSaving", GetSaving);
 app.use("/GetBudgetCapacity", GetBudgetCapacity);
+app.use("/GetTotalIncome", GetTotalIncome);
+app.use("/GetTotalExpense", GetTotalExpense);
 
 app.listen(19002)
