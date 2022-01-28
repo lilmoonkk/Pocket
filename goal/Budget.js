@@ -15,6 +15,7 @@ export default function Budget()
     const {userid} = route.params;
     const [category,setCategory] = useState("")
     const [budgetData, setBudgetData] = useState("");
+    const [totalBudgetData, setTotalBudgetData] = useState("");
     const [UpdateBudgetModalVisible, setUBModalVisible] = useState(false);
     const[amount, setAmount] = useState("")
     const [isTfReady, setTfReady] = useState(false);
@@ -39,14 +40,14 @@ export default function Budget()
     useEffect(() => {
         async function predict(){
             if (isTfReady) {
-            const response = await fetch('http://192.168.43.89:19002/GetLastMonthIncome?userid=' + userid + '&month=' + month + '&year=' + year);
+            const response = await fetch('http://192.168.0.12:19002/GetLastMonthIncome?userid=' + userid + '&month=' + month + '&year=' + year);
             const lmincome = await response.json()
-            const response2 = await fetch('http://192.168.43.89:19002/GetProfile?userid=' + userid);
+            const response2 = await fetch('http://192.168.0.12:19002/GetProfile?userid=' + userid);
             const profile = await response2.json();
             var lm_income = lmincome[0]["sum"];
-            console.log(lm_income)
+            //console.log(lm_income)
             var fixspend = profile[0].fixedspending.toString();
-            console.log(typeof(fixspend))
+            //console.log(typeof(fixspend))
             if(lm_income-fixspend > 20000){
                 lm_income = lm_income * 0.5
             }
@@ -56,7 +57,7 @@ export default function Budget()
             else if(lm_income - fixspend > 5000){
                 lm_income = lm_income * 0.7
             }
-            console.log(lm_income)
+            //console.log(lm_income)
             lm_income = (lm_income-670)/(66395-670)
             fixspend = (fixspend-418)/(1621-418)
             const x = tf.tensor2d([[lm_income,fixspend]])
@@ -67,7 +68,7 @@ export default function Budget()
             //Predict result
             var result = await model.predict(x).dataSync()
             result = parseFloat(result).toFixed(2)
-            console.log(result)
+            //console.log(result)
             setResult(result)
         }
     }
@@ -81,11 +82,12 @@ export default function Budget()
       
 
     const fetchBudgetData = async()=>{
-        const response = await fetch('http://192.168.43.89:19002/GetBudget?userid=' + userid);
+        const response = await fetch('http://192.168.0.12:19002/GetBudget?userid=' + userid);
         const expense = await response.json();
         setBudgetData(expense[0]);
+        setTotalBudgetData(expense[1][0].sum.toFixed(2));
         //console.log("data")
-        //console.log(typeof(expense[1][0]["sum"]))
+        //console.log(expense[1][0].sum)
     }
 
     const UpdateBudget= () => {
@@ -96,7 +98,7 @@ export default function Budget()
         else
         {
             //send data to backend
-            fetch('http://192.168.43.89:19002/UpdateBudget', {
+            fetch('http://192.168.0.12:19002/UpdateBudget', {
               method: 'post',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({
@@ -120,8 +122,10 @@ export default function Budget()
             <Text style = {styles.header}> Budget </Text>
             <SafeAreaView style={styles.body}>
                 <View style = {{alignItems: 'center', padding: 10}}>
-                    <Text style = {{fontWeight: 'bold', fontSize: 18}}>Predicted Budget:</Text>
-                    <Text style = {{fontSize: 18}}> RM{result}</Text>    
+                    <Text style = {{fontWeight: 'bold', fontSize: 18}}>Your current budget amount:</Text>
+                    <Text style = {{fontSize: 18}}>RM {totalBudgetData}</Text>
+                    <Text style = {{fontWeight: 'bold', color: '#A0C4FF'}}>Suggestion for total budget amount:</Text>
+                    <Text style = {{color: '#A0C4FF'}}> RM {result}</Text>                  
                 </View>
                 <FlatList
                     horizontal = {false}
