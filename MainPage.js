@@ -22,10 +22,11 @@ export default function MainPage(){
           screenOptions={{
             tabBarActiveTintColor: 'blue',
             tabBarInactiveTintColor: 'black',
+            tabBarLabelStyle: { fontSize: 16 },
             tabBarStyle: {
               elevation: 2,
               backgroundColor: "#FFD6A5",
-              marginBottom: 30,
+              marginBottom: 20,
             }}}>
           <topTab.Screen name="Spending" component={spending} initialParams={{userid: userid}}/>
           <topTab.Screen name="Income" component={income} initialParams={{userid: userid}}/>
@@ -122,7 +123,7 @@ function spending(){
   return(
     <View style={{flex: 1, backgroundColor:"#FFD6A5",}}>
       <SafeAreaView style={globalStyles.body}>
-        <Text style = {{fontWeight: 'bold', fontSize: 18}}>
+        <Text style = {{fontWeight: 'bold', fontSize: 18, paddingTop: 10}}>
           Today {date}
         </Text>
         <FlatList  
@@ -291,7 +292,7 @@ function income(){
   return(
     <SafeAreaView style={{flex: 1, backgroundColor: "#FFD6A5",}}>
       <SafeAreaView style={globalStyles.body}>
-        <Text style = {{fontWeight: 'bold', fontSize: 18}}>
+        <Text style = {{fontWeight: 'bold', fontSize: 18, paddingTop: 10}}>
           Today {date}
         </Text>
         <FlatList

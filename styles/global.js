@@ -15,7 +15,7 @@ export const globalStyles = StyleSheet.create({
     
     background:{
         flex: 1,
-        marginTop: -150,
+        marginTop: -160,
         marginStart: 20,
         marginEnd: 20,
         marginBottom: 10,

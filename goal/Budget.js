@@ -15,6 +15,7 @@ export default function Budget()
     const {userid} = route.params;
     const [category,setCategory] = useState("")
     const [budgetData, setBudgetData] = useState("");
+    const [totalBudgetData, setTotalBudgetData] = useState("");
     const [UpdateBudgetModalVisible, setUBModalVisible] = useState(false);
     const[amount, setAmount] = useState("")
     const [isTfReady, setTfReady] = useState(false);
@@ -44,9 +45,9 @@ export default function Budget()
             const response2 = await fetch('http://192.168.43.89:19002/GetProfile?userid=' + userid);
             const profile = await response2.json();
             var lm_income = lmincome[0]["sum"];
-            console.log(lm_income)
+            
             var fixspend = profile[0].fixedspending.toString();
-            console.log(typeof(fixspend))
+            
             if(lm_income-fixspend > 20000){
                 lm_income = lm_income * 0.5
             }
@@ -56,7 +57,7 @@ export default function Budget()
             else if(lm_income - fixspend > 5000){
                 lm_income = lm_income * 0.7
             }
-            console.log(lm_income)
+            
             lm_income = (lm_income-670)/(66395-670)
             fixspend = (fixspend-418)/(1621-418)
             const x = tf.tensor2d([[lm_income,fixspend]])
@@ -67,7 +68,6 @@ export default function Budget()
             //Predict result
             var result = await model.predict(x).dataSync()
             result = parseFloat(result).toFixed(2)
-            console.log(result)
             setResult(result)
         }
     }
@@ -84,6 +84,7 @@ export default function Budget()
         const response = await fetch('http://192.168.43.89:19002/GetBudget?userid=' + userid);
         const expense = await response.json();
         setBudgetData(expense[0]);
+        setTotalBudgetData(expense[1][0].sum.toFixed(2));
         //console.log("data")
         //console.log(typeof(expense[1][0]["sum"]))
     }
@@ -115,13 +116,15 @@ export default function Budget()
     return (
         
     <View style={{flex: 1}}>
-        <View style={globalStyles.header}></View>
+        <View style={styles.header}></View>
         <View style={globalStyles.background}>
-            <Text style = {styles.header}> Budget </Text>
-            <SafeAreaView style={styles.body}>
+            <Text style = {styles.headertext}> Budget </Text>
+            <View style={styles.body}>
                 <View style = {{alignItems: 'center', padding: 10}}>
-                    <Text style = {{fontWeight: 'bold', fontSize: 18}}>Predicted Budget:</Text>
-                    <Text style = {{fontSize: 18}}> RM{result}</Text>    
+                    <Text style = {{fontWeight: 'bold', fontSize: 18}}>Your current budget amount:</Text>
+                    <Text style = {{fontSize: 18}}>RM {totalBudgetData}</Text>
+                    <Text style = {{fontWeight: 'bold', color: 'blue', fontSize: 16}}>Suggestion for total budget amount:</Text>
+                    <Text style = {{color: 'blue', fontSize: 16}}>RM {result}</Text>     
                 </View>
                 <FlatList
                     horizontal = {false}
@@ -178,7 +181,7 @@ export default function Budget()
                     </View>
                     
                 </Modal>
-            </SafeAreaView>
+            </View>
         </View> 
     </View>
     );
@@ -186,19 +189,19 @@ export default function Budget()
 
 const styles = StyleSheet.create
 ({
-    background:{
-        flex: 1,
-        marginTop: -100,
-        marginStart: 20,
-        marginEnd: 20,
-        marginBottom: 10,
+    header:{
+        marginTop: 40,
+        height: 170,
+        backgroundColor: "#C3F4B3",
+        borderBottomLeftRadius: 15,
+        borderBottomRightRadius: 15,
         shadowColor: 'black',
         shadowOpacity: 1,
         shadowOffset: {width: 1, height: 3},
-        elevation: 4, 
+        elevation: 4,
     },
 
-    header: {
+    headertext: {
         textAlign: 'center',
         fontWeight: 'bold',
         fontSize: 24,

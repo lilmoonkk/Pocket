@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Modal, FlatList, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Modal, FlatList, TouchableOpacity} from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useRoute } from '@react-navigation/core';
 import { ProgressBar, Colors } from 'react-native-paper';
 import MonthSelectorCalendar from 'react-native-month-selector'; 
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 export default function Report(){
@@ -16,16 +17,17 @@ export default function Report(){
   return(
     
     <View style={{flex: 1,}}>
-      <View style={styles.header}></View>
-      <View style={styles.background}>
+      <View style = {styles.header}></View>
+      <View style = {styles.background}>
         <topTab.Navigator
           screenOptions={{
             tabBarActiveTintColor: 'blue',
             tabBarInactiveTintColor: 'black',
+            tabBarLabelStyle: { fontSize: 16 },
             tabBarStyle: {
               elevation: 2,
               backgroundColor: "#A0C4FF",
-              marginBottom: 30,
+              marginBottom: 20,
             }}}>
           <topTab.Screen name="Daily" component={daily} initialParams={{userid: userid}}/>
           <topTab.Screen name="Monthly" component={monthly} initialParams={{userid: userid}}/>
@@ -89,13 +91,13 @@ function daily()
   };
 
   const fetchSaving = async()=>{
-    const response = await fetch('http://192.168.0.12:19002/GetSaving?userid=' + userid);
+    const response = await fetch('http://192.168.43.89:19002/GetSaving?userid=' + userid);
     const saving = await response.json();
     setSaving(saving[0].amount.toFixed(2));
   }
 
   const fetchIncomeData = async()=>{
-    const response = await fetch('http://192.168.0.12:19002/GetIncome?userid=' + userid + '&day=' + day + '&month=' + month + '&year=' + year);
+    const response = await fetch('http://192.168.43.89:19002/GetIncome?userid=' + userid + '&day=' + day + '&month=' + month + '&year=' + year);
     const income = await response.json();
     setIncomeData(income[0]);
     if (income[1][0].sum == null){
@@ -107,7 +109,7 @@ function daily()
   }
 
   const fetchExpenseData = async()=>{
-    const response = await fetch('http://192.168.0.12:19002/GetExpense?userid=' + userid + '&day=' + day + '&month=' + month + '&year=' + year);
+    const response = await fetch('http://192.168.43.89:19002/GetExpense?userid=' + userid + '&day=' + day + '&month=' + month + '&year=' + year);
     const expense = await response.json();
     setExpenseData(expense[0]);
     if (expense[1][0].sum == null){
@@ -120,7 +122,7 @@ function daily()
   }
 
   const fetchBudgetCapacity = async()=>{
-    const response = await fetch('http://192.168.0.12:19002/GetBudgetCapacity?userid=' + userid + '&month=' + month + '&year=' + year);
+    const response = await fetch('http://192.168.43.89:19002/GetBudgetCapacity?userid=' + userid + '&month=' + month + '&year=' + year);
     const budgetCapacity = await response.json();
     setBCData(budgetCapacity);
   }
@@ -142,7 +144,7 @@ function daily()
           </View>
         </View>
         
-        <View style = {{paddingLeft: 15,}}>
+        <View style = {{flex: 0.6, paddingLeft: 15,}}>
           <Text style = {styles.title}>Income</Text>
           {sumIncomeData == null ? <Text style={styles.text}>Null</Text> :<Text style = {styles.text}>Total: RM {sumIncomeData}</Text>} 
           <FlatList
@@ -156,7 +158,8 @@ function daily()
                     <Text style={styles.text}> RM {item.amount.toFixed(2)}</Text>
                 </View>}
           />
-          
+        </View>
+        <View style = {{flex: 0.7, paddingLeft: 15,}}>
           <Text style = {styles.title}>Expenses</Text>
           {sumExpenseData == null ? <Text style={styles.text}>Null</Text> :<Text style={styles.text}>Total (RM) : {sumExpenseData}</Text>} 
           <FlatList
@@ -172,7 +175,9 @@ function daily()
               </View>
               }
           />
+        </View>  
 
+        <View style = {{flex:1, paddingLeft: 15,}}>
           {showBudgetCapacity?<Text style = {styles.title}>Budget Capacity</Text>:null}
           <FlatList
               style={{opacity: showBudgetCapacity==true?1: 0}}
@@ -187,7 +192,7 @@ function daily()
               }
           />
         </View>
-        
+
         <Modal
           transparent = {true}
           backdropColor={'green'}
@@ -273,6 +278,8 @@ function monthly()
   const [saving, setSaving] = useState("");
   const [incomeBreakdown, setIB] = useState("")
   const [expenseBreakdown, setEB] = useState("")
+  const currentmonth = new Date().getMonth()+1;
+  const currentyear = new Date().getFullYear();
 
   useEffect(() => {
     fetchIncomeData();
@@ -283,7 +290,7 @@ function monthly()
   }, [])
 
   const fetchIncomeData = async()=>{
-    const response = await fetch('http://192.168.0.12:19002/GetTotalIncome?userid=' + userid + '&month=' + month + '&year=' + year);
+    const response = await fetch('http://192.168.43.89:19002/GetTotalIncome?userid=' + userid + '&month=' + month + '&year=' + year);
     const income = await response.json();
     if (income[0].sum == null){
       setIncomeData(null);
@@ -296,7 +303,7 @@ function monthly()
   }
 
   const fetchSaving = async()=>{
-    const response = await fetch('http://192.168.0.12:19002/GetSaving?userid=' + userid);
+    const response = await fetch('http://192.168.43.89:19002/GetSaving?userid=' + userid);
     const saving = await response.json();
     if (saving[0].amount == null){
       setSaving(null);
@@ -308,7 +315,7 @@ function monthly()
   }
 
   const fetchExpenseData = async()=>{
-    const response = await fetch('http://192.168.0.12:19002/GetTotalExpense?userid=' + userid + '&month=' + month + '&year=' + year);
+    const response = await fetch('http://192.168.43.89:19002/GetTotalExpense?userid=' + userid + '&month=' + month + '&year=' + year);
     const expense = await response.json();
     //console.log(expense);
     if (expense[0].sum == null){
@@ -322,7 +329,7 @@ function monthly()
   }
 
   const fetchIBData = async()=>{
-    const response = await fetch('http://192.168.0.12:19002/GetIncomePie?userid=' + userid + '&month=' + month + '&year=' + year);
+    const response = await fetch('http://192.168.43.89:19002/GetIncomePie?userid=' + userid + '&month=' + month + '&year=' + year);
     const income = await response.json();
     if (income == null){
       setIB(null);
@@ -337,7 +344,7 @@ function monthly()
   }
 
   const fetchEBData = async()=>{
-    const response = await fetch('http://192.168.0.12:19002/GetExpensePie?userid=' + userid + '&month=' + month + '&year=' + year);
+    const response = await fetch('http://192.168.43.89:19002/GetExpensePie?userid=' + userid + '&month=' + month + '&year=' + year);
     const expense = await response.json();
     if (expense == null){
       setEB(null);
@@ -353,72 +360,83 @@ function monthly()
   return(
     <View style={{flex: 1, backgroundColor:"#A0C4FF",}}>
       <View style = {styles.body}>
-      <View style={styles.calendar}>
-            <TouchableOpacity
-              onPress = {() => {
-                setCalenderModalVisible(true);}}>
-              <MaterialCommunityIcons name="calendar" size={30} />
-            </TouchableOpacity>
-      </View>
-      <Text>Total Income</Text>
-      {incomeData == null ? <Text style={styles.text}>Null</Text> :<Text style={styles.text}>RM {incomeData}</Text>} 
-      <Text>Total Expense</Text>
-      {expenseData == null ? <Text style={styles.text}>Null</Text> :<Text style={styles.text}>RM {expenseData}</Text>} 
-      <Text>Cash Flow</Text>
-      <Text style = {{color: incomeData - expenseData<=0? 'red' : 'green'}}>{incomeData - expenseData<=0? '- ' : '+ '}RM {incomeData - expenseData}</Text>
-      <View style={{opacity: month==new Date().getMonth+1 && year==new Date().getFullYear?1: 0}}>
-        <Text>Total Saving</Text>
-        {saving == null ? <Text style={styles.text}>Null</Text> :<Text style={styles.text}>RM {saving}</Text>} 
-      </View>
-      <Text>Income Breakdown</Text>
-      <FlatList
-        horizontal = {false}
-        data = {incomeBreakdown}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem = {({item}) =>
-        <View style={styles.income}>
-            <Text style={styles.text}>{item.desc}</Text>
-            <Text style={styles.text}>{((item.total/incomeData).toFixed(2)) * 100} %</Text>
-        </View>
-        }
-      />
-      <Text>Spending Breakdown</Text>
-      <FlatList
-        horizontal = {false}
-        data = {expenseBreakdown}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem = {({item}) =>
-        <View style={styles.income}>
-            <Text style={styles.text}>{item.category}</Text>
-            <Text style={styles.text}>{((item.total/expenseData).toFixed(2)) * 100} %</Text>
-        </View>
-        }
-      />
-      <Modal
-          transparent = {true}
-          backdropColor={'green'}
-          backdropOpacity= {1}
-          visible = {CalenderModalVisible}
-      >
-        <View style = {styles.modal_container}>
-          <View style={styles.modal}>
-            <MonthSelectorCalendar
-                onMonthTapped={(selectedDate) => {setMonth(selectedDate.month()+1); setYear(selectedDate.year());}}
-            />
-            <Text style = {styles.button} 
-              onPress = {() => {
-                fetchIncomeData();
-                fetchSaving();
-                fetchExpenseData();
-                fetchIBData();
-                fetchEBData();
-                setCalenderModalVisible(false);}}>
-              Go</Text>
+        <View style = {{flexDirection: 'row', justifyContent: 'space-between',}}>
+          <View style = {styles.flowContainer}>
+            <Text style = {styles.title}>Total Income</Text>
+            {incomeData == null ? <Text style={styles.text}>Null</Text> :<Text style={styles.text}> RM {incomeData}</Text>} 
+            <Text style = {styles.title}>Total Expense</Text>
+            {expenseData == null ? <Text style={styles.text}>Null</Text> :<Text style={styles.text}> RM {expenseData}</Text>} 
+            <Text style = {styles.title}>Cash Flow</Text>
+            <Text style = {{color: incomeData - expenseData<=0? 'red' : 'green'}}>
+              {incomeData - expenseData<=0? '- ' : '+ '}RM {incomeData - expenseData}</Text>
+            <View style={{opacity: month==currentmonth && year==currentyear?1: 0}}>
+              <Text style = {styles.title}>Total Saving</Text>
+              {saving == null ? <Text style={styles.text}>Null</Text> :<Text style={styles.text}>RM {saving}</Text>} 
+            </View>
+          </View>
+          <View style={styles.month_picker}>
+              <TouchableOpacity
+                onPress = {() => {
+                  setCalenderModalVisible(true);}}>
+                <MaterialCommunityIcons name="calendar" size={30} />
+              </TouchableOpacity>
           </View>
         </View>
-      </Modal>
+        
+        <View style = {{flex: 0.5, paddingLeft: 15,}}>
+          <Text style = {styles.title}>Income Breakdown</Text>
+          <FlatList
+          horizontal = {false}
+          data = {incomeBreakdown}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem = {({item}) =>
+          <View style={styles.breakdown}>
+              <Text style={styles.text}>{item.desc}</Text>
+              <Text style={styles.text}>{((item.total/incomeData) * 100).toFixed(2)} %</Text>
+          </View>
+        }/>
+        </View>
+        <View style = {{flex: 0.5, paddingLeft: 15, marginTop: 10}}>
+          <Text style = {styles.title}>Spending Breakdown</Text>
+          <FlatList
+            horizontal = {false}
+            data = {expenseBreakdown}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem = {({item}) =>
+            <View style={styles.breakdown}>
+                <View style = {{maxWidth: 200}}>
+                  <Text style={styles.text}>{item.category}</Text>
+                </View>
+                <Text style={styles.text}>{((item.total/expenseData) * 100).toFixed(2)} %</Text>
+            </View>
+          }/>
+        </View>  
+
+        <Modal
+            transparent = {true}
+            backdropColor={'green'}
+            backdropOpacity= {1}
+            visible = {CalenderModalVisible}
+        >
+          <View style = {styles.modal_container}>
+            <View style={styles.modal}>
+              <MonthSelectorCalendar
+                  onMonthTapped={(selectedDate) => {setMonth(selectedDate.month()+1); setYear(selectedDate.year());}}
+              />
+              <Text style = {styles.button} 
+                onPress = {() => {
+                  fetchIncomeData();
+                  fetchSaving();
+                  fetchExpenseData();
+                  fetchIBData();
+                  fetchEBData();
+                  setCalenderModalVisible(false);}}>
+                Go</Text>
+            </View>
+          </View>
+        </Modal>
       
-    </View>
+      </View>
     </View>
   )
 }
@@ -437,7 +455,7 @@ const styles = StyleSheet.create({
   },
   background:{
     flex: 1,
-    marginTop: -150,
+    marginTop: -160,
     marginStart: 20,
     marginEnd: 20,
     marginBottom: 10,
@@ -450,12 +468,18 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     elevation: 4,
   },
+  headertext: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 24,
+  },
   savingContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    height: 70,
-    padding : 15,
+    paddingLeft : 15,
+    paddingRight : 15,
+    paddingTop : 10,
   },
   title: {
     fontSize: 16, 
@@ -469,8 +493,21 @@ const styles = StyleSheet.create({
   calendar: {
     padding: 5, 
     backgroundColor: "#A0C4FF", 
-    alignItems: 'flex-end',
+    alignItems: 'center',
+    height: 40,
     borderRadius: 15,
+  },
+  month_picker: {
+    padding: 5,
+    margin: 10,
+    height: 40,
+    backgroundColor: "#A0C4FF", 
+    alignItems: 'center',
+    borderRadius: 15,
+  },
+  flowContainer: {
+    paddingLeft: 15,
+    paddingVertical: 10,
   },
   income: {
     borderWidth: 2,
@@ -478,6 +515,18 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 10,
     borderColor: "#A0C4FF",
+    maxWidth: 300,
+    maxHeight: 100,
+  },
+  breakdown: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderWidth: 2,
+    margin: 5,
+    padding: 5,
+    borderRadius: 10,
+    borderColor: "#A0C4FF",
+    width: '90%',
   },
   modal_container: {
     flex: 1,
@@ -524,5 +573,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 15,
     fontSize: 16,
+    alignSelf: 'flex-end'
   },
 })

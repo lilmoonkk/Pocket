@@ -162,41 +162,46 @@ export default function Goal() {
             <Text style={styles.text}>Progress:</Text>
             <ProgressBar color = 'blue' style = {styles.progress} progress={emergencyFundData["percentage"]}  />  
           </View>
-            
-          <FlatList
-            horizontal = {false}
-            data = {goalData}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem = {({item}) =>
-            <View style={styles.income}>
-              <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={styles.title}>Till {item.day}/{item.month}/{item.year}</Text>
+
+          <View style = {{flex: 1}}>
+            <FlatList
+              horizontal = {false}
+              showsVerticalScrollIndicator = {true}
+              data = {goalData}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem = {({item}) =>
+              <View style={styles.income}>
                 <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
-                  <TouchableOpacity
-                    onPress = {() => confirmDelete(item.id)}>
-                    <AntDesign style = {{padding:5}} name="delete" size={24} color="black" />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress = {() => openModalWithID(item.id)}>
-                    <AntDesign style = {{padding:5}} name="edit" size={24} color="black" />
-                  </TouchableOpacity>
+                  <Text style={styles.title}>Till {item.day}/{item.month}/{item.year}</Text>
+                  <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <TouchableOpacity
+                      onPress = {() => confirmDelete(item.id)}>
+                      <AntDesign style = {{padding:5}} name="delete" size={24} color="black" />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress = {() => openModalWithID(item.id)}>
+                      <AntDesign style = {{padding:5}} name="edit" size={24} color="black" />
+                    </TouchableOpacity>
+                  </View>
                 </View>
+                <Text style={styles.title}>{item.desc}</Text>
+                <Text style={styles.text}>Target: RM {item.target.toFixed(2)}</Text>
+                <Text style={styles.text}>Now: RM {item.allocated.toFixed(2)}</Text>
+                <Text style={styles.text}>Progress:</Text>
+                <ProgressBar color = 'blue' style = {styles.progress} progress={item.percentage}  />  
               </View>
-              <Text style={styles.title}>{item.desc}</Text>
-              <Text style={styles.text}>Target: RM {item.target.toFixed(2)}</Text>
-              <Text style={styles.text}>Now: RM {item.allocated.toFixed(2)}</Text>
-              <Text style={styles.text}>Progress:</Text>
-              <ProgressBar color = 'blue' style = {styles.progress} progress={item.percentage}  />  
-            </View>
             }/>
-            <TouchableOpacity 
-              style={styles.addBtn}
-              onPress = {() => {
-                  setAGModalVisible(true);
-                }}>
-                <Image source={require('../assets/add_button.png')}
-                  style={{width:40,height:40}}></Image>
-            </TouchableOpacity>
+            
+          </View>  
+          
+          <TouchableOpacity 
+            style={styles.addBtn}
+            onPress = {() => {
+                setAGModalVisible(true);
+              }}>
+              <Image source={require('../assets/add_button.png')}
+                style={{width:40,height:40}}></Image>
+          </TouchableOpacity>
         </View>
 
         
@@ -230,9 +235,9 @@ export default function Goal() {
               </View>
             </View>
             
-            <Text style = {globalStyles.label}>Target</Text>
+            <Text style = {globalStyles.label}>Target (MYR)</Text>
             <TextInput style = {globalStyles.input} onChangeText = {setTarget}/>
-            <Text style = {globalStyles.label}>Allocated</Text>
+            <Text style = {globalStyles.label}>Allocated (MYR)</Text>
             <TextInput style = {globalStyles.input} onChangeText = {setAllocated}/>
             <View style ={globalStyles.buttonContainer}>
               <Text 
@@ -265,7 +270,7 @@ export default function Goal() {
           <View style = {styles.modal}>
             <Text style = {styles.title}>Please enter the amount you would like to add on for this goal:</Text>
             <Text style = {styles.title}>(Enter -xx to extract allocated amount)</Text>
-            <Text style = {globalStyles.label}>Amount(MYR)</Text>
+            <Text style = {globalStyles.label}>Amount (MYR)</Text>
             <TextInput style = {globalStyles.input} onChangeText = {setAmount}/>
             <View style ={globalStyles.buttonContainer}>
               <Text 

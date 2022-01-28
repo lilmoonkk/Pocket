@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, Modal } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/core';
 import { auth, emailcred } from '../firebase';
 import { AntDesign } from '@expo/vector-icons';
@@ -102,7 +101,7 @@ const EditProfile = () => {
             <View style = {styles.background}>
                 <Text style = {styles.header}> Profile </Text>
                     
-                <SafeAreaView style = {styles.body}>
+                <View style = {styles.body}>
                     <TouchableOpacity
                         style = {{alignSelf: 'flex-end', padding: 15,}}
                         onPress = {() => {
@@ -200,7 +199,7 @@ const EditProfile = () => {
                         </View>
                         
                     </Modal>
-                </SafeAreaView>
+                </View>
             </View>
         </View>
     )
@@ -233,7 +232,6 @@ const styles = StyleSheet.create({
     },
     body: {
         flex: 1,
-        alignItems: 'center',
         marginTop: 15,
         backgroundColor: 'white',
         borderTopRightRadius: 10,
@@ -261,6 +259,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flex: 1,
+        alignSelf: 'center',
         justifyContent: 'flex-end',
         width: '95%',
         marginTop: 10,
