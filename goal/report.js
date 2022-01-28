@@ -273,6 +273,8 @@ function monthly()
   const [saving, setSaving] = useState("");
   const [incomeBreakdown, setIB] = useState("")
   const [expenseBreakdown, setEB] = useState("")
+  const currentmonth = new Date().getMonth()+1;
+  const currentyear = new Date().getFullYear()
 
   useEffect(() => {
     fetchIncomeData();
@@ -366,7 +368,7 @@ function monthly()
       {expenseData == null ? <Text style={styles.text}>Null</Text> :<Text style={styles.text}>RM {expenseData}</Text>} 
       <Text>Cash Flow</Text>
       <Text style = {{color: incomeData - expenseData<=0? 'red' : 'green'}}>{incomeData - expenseData<=0? '- ' : '+ '}RM {incomeData - expenseData}</Text>
-      <View style={{opacity: month==new Date().getMonth+1 && year==new Date().getFullYear?1: 0}}>
+      <View style={{opacity: month==currentmonth && year==currentyear?1: 0}}>
         <Text>Total Saving</Text>
         {saving == null ? <Text style={styles.text}>Null</Text> :<Text style={styles.text}>RM {saving}</Text>} 
       </View>
