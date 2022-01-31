@@ -268,8 +268,7 @@ export default function Goal() {
         }}>
         <View style = {globalStyles.modal_container}>
           <View style = {styles.modal}>
-            <Text style = {styles.title}>Please enter the amount you would like to add on for this goal:</Text>
-            <Text style = {styles.title}>(Enter -xx to extract allocated amount)</Text>
+            <Text style = {styles.title}>Please enter the amount you would like to allocate for this goal:</Text>
             <Text style = {globalStyles.label}>Amount (MYR)</Text>
             <TextInput style = {globalStyles.input} onChangeText = {setAmount}/>
             <View style ={globalStyles.buttonContainer}>
